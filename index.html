@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="fr" class="scroll-smooth">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description"
+        content="WP_Architect. — Maintenance technique, sécurité et sauvegardes pour votre site WordPress. Abonnement mensuel fixe. Aucun appel requis." />
+    <meta name="robots" content="index, follow" />
+
+    <!-- Favicon SVG inline -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAzMiAzMiI+CiAgPHJlY3Qgd2lkdGg9IjMyIiBoZWlnaHQ9IjMyIiByeD0iNiIgZmlsbD0iIzBhMGUxNCIvPgogIDxwYXRoIGQ9Ik0xNiAyTDMgNy41djguNWMwIDcuNSA1LjUgMTQuNSAxMyAxNi41IDcuNS0yIDEzLTkgMTMtMTYuNVY3LjVMMTYgMnoiIHN0cm9rZT0id2hpdGUiIHN0cm9rZS13aWR0aD0iMS4yIiBmaWxsPSJub25lIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgPHBhdGggZD0iTTkgMTNsMi41IDcuNUwxNiAxNWw0LjUgNS41TDIzIDEzIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjEuNiIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIiBmaWxsPSJub25lIi8+CiAgPHBhdGggZD0iTTEzLjUgMThsMi41LTUgMi41IDUiIHN0cm9rZT0iIzM5ZDM1MyIgc3Ryb2tlLXdpZHRoPSIxLjQiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIgZmlsbD0ibm9uZSIvPgo8L3N2Zz4=" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="WP_Architect. — Maintenance WordPress sans prise de tête" />
+    <meta property="og:description"
+        content="Sécurité, sauvegardes et mises à jour WordPress. Soumettez vos tickets sur Trello. On s'occupe du reste." />
+    <meta property="og:type" content="website" />
+
+    <title>WP_Architect. — Maintenance &amp; Sécurité WordPress</title>
+
+    <!-- Preconnect Google Fonts (réduit la latence DNS) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!--
+      Fonts :
+      - Inter       → corps de texte, UI générale
+      - JetBrains Mono → prix, statuts, labels techniques
+      display=swap → texte visible immédiatement (évite FOIT → boost PageSpeed)
+    -->
+    <link rel="preload" as="style"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Tailwind config : palette custom WP_Architect. -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        neon: {
+                            DEFAULT: "#39d353",   /* vert néon principal */
+                            dim: "#1a6b2a",    /* vert sombre — hover, backgrounds */
+                            glow: "rgba(57, 211, 83, 0.15)", /* halo subtil */
+                        },
+                        dark: {
+                            900: "#060a0f",       /* fond absolu */
+                            800: "#0a0e14",       /* fond principal */
+                            700: "#0f1520",       /* cards / surfaces */
+                            600: "#161d2b",       /* borders légères */
+                            500: "#1e2839",       /* borders medium */
+                        },
+                    },
+                    fontFamily: {
+                        sans: ["Inter", "sans-serif"],
+                        mono: ["JetBrains Mono", "monospace"],
+                    },
+                    boxShadow: {
+                        neon: "0 0 20px rgba(57, 211, 83, 0.25)",
+                        "neon-sm": "0 0 8px rgba(57, 211, 83, 0.15)",
+                    },
+                },
+            },
+        };
+    </script>
+
+    <!-- CSS global minimal (ce que Tailwind ne couvre pas) -->
+    <style>
+        /* Scrollbar discrète — thème dark */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #0a0e14;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #1e2839;
+            border-radius: 3px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #39d353;
+        }
+
+        /* Selection highlight */
+        ::selection {
+            background: rgba(57, 211, 83, 0.25);
+            color: #fff;
+        }
+
+        /* Antialiasing global */
+        html {
+            -webkit-font-smoothing: antialiased;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Glow subtil sur les boutons CTA */
+        .btn-neon:hover {
+            box-shadow: 0 0 24px rgba(57, 211, 83, 0.40);
+        }
+
+        /* Ligne de séparation sous la navbar au scroll */
+        .navbar-scrolled {
+            border-bottom: 1px solid rgba(57, 211, 83, 0.12);
+        }
+
+        /* Grille de fond hero — effet cyber grid */
+        .hero-grid {
+            background-image:
+                linear-gradient(rgba(57, 211, 83, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(57, 211, 83, 0.03) 1px, transparent 1px);
+            background-size: 48px 48px;
+        }
+
+        /* Halo radial centré derrière le titre */
+        .hero-glow {
+            background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(57, 211, 83, 0.08) 0%, transparent 70%);
+        }
+
+        /* Badge pulse */
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        .pulse-dot {
+            animation: pulse-dot 2s ease-in-out infinite;
+        }
+
+        /* Terminal — blink curseur */
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        .cursor-blink {
+            animation: blink 1s step-end infinite;
+        }
+
+        /* Terminal — lignes qui apparaissent en cascade */
+        .term-line {
+            opacity: 0;
+            animation: fadein 0.4s ease forwards;
+        }
+
+        .term-line:nth-child(1) {
+            animation-delay: 0.2s;
+        }
+
+        .term-line:nth-child(2) {
+            animation-delay: 0.7s;
+        }
+
+        .term-line:nth-child(3) {
+            animation-delay: 1.2s;
+        }
+
+        .term-line:nth-child(4) {
+            animation-delay: 1.7s;
+        }
+
+        .term-line:nth-child(5) {
+            animation-delay: 2.2s;
+        }
+
+        .term-line:nth-child(6) {
+            animation-delay: 2.7s;
+        }
+
+        .term-line:nth-child(7) {
+            animation-delay: 3.2s;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+                transform: translateY(4px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Hero — fade-up au chargement */
+        .fade-up {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadein 0.7s ease forwards;
+        }
+
+        .fade-up-1 {
+            animation-delay: 0.1s;
+        }
+
+        .fade-up-2 {
+            animation-delay: 0.25s;
+        }
+
+        .fade-up-3 {
+            animation-delay: 0.4s;
+        }
+
+        .fade-up-4 {
+            animation-delay: 0.55s;
+        }
+
+        .fade-up-5 {
+            animation-delay: 0.7s;
+        }
+
+        /* Scroll-reveal — déclenché par IntersectionObserver */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+
+        .reveal.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .reveal-delay-1 {
+            transition-delay: 0.1s;
+        }
+
+        .reveal-delay-2 {
+            transition-delay: 0.2s;
+        }
+
+        .reveal-delay-3 {
+            transition-delay: 0.3s;
+        }
+
+        .reveal-delay-4 {
+            transition-delay: 0.4s;
+        }
+
+        /* Numéro d'étape — ring néon */
+        .step-number {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            border: 1px solid rgba(57, 211, 83, 0.35);
+            background: rgba(57, 211, 83, 0.06);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 13px;
+            font-weight: 500;
+            color: #39d353;
+            flex-shrink: 0;
+        }
+
+        /* Card step hover */
+        .step-card {
+            border: 1px solid #1e2839;
+            background: #0f1520;
+            border-radius: 12px;
+            padding: 1.75rem;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+
+        .step-card:hover {
+            border-color: rgba(57, 211, 83, 0.25);
+            box-shadow: 0 0 32px rgba(57, 211, 83, 0.06);
+        }
+
+      /* Modales légales */
+      .modal-overlay {
+        position: fixed; inset: 0; z-index: 200;
+        background: rgba(6,10,15,0.92);
+        backdrop-filter: blur(6px);
+        display: flex; align-items: center; justify-content: center;
+        padding: 1.5rem;
+        opacity: 0; pointer-events: none;
+        transition: opacity 0.2s ease;
+      }
+      .modal-overlay.open {
+        opacity: 1; pointer-events: auto;
+      }
+      .modal-box {
+        background: #0f1520;
+        border: 1px solid #1e2839;
+        border-radius: 16px;
+        max-width: 640px; width: 100%;
+        max-height: 80vh;
+        overflow-y: auto;
+        padding: 2rem;
+        transform: translateY(12px);
+        transition: transform 0.2s ease;
+      }
+      .modal-overlay.open .modal-box {
+        transform: translateY(0);
+      }
+      .modal-box::-webkit-scrollbar { width: 4px; }
+      .modal-box::-webkit-scrollbar-track { background: #0f1520; }
+      .modal-box::-webkit-scrollbar-thumb { background: #1e2839; border-radius: 2px; }
+    </style>
+</head>
+
+<body class="bg-dark-800 text-slate-200 font-sans antialiased">
+
+    <!-- ===================== NAVBAR ===================== -->
+    <header id="navbar"
+        class="fixed top-0 left-0 right-0 z-50 bg-dark-800/80 backdrop-blur-md transition-all duration-300">
+        <div class="max-w-5xl mx-auto px-4 h-16 flex items-center justify-between">
+
+            <!-- Logo -->
+            <a href="#" class="flex items-center gap-2.5 group" aria-label="WP_Architect. — accueil">
+                <!-- Bouclier SVG inline — zéro requête réseau -->
+                <svg width="32" height="36" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+                    aria-hidden="true" class="flex-shrink-0 transition-transform duration-200 group-hover:scale-105">
+                    <!-- Bouclier extérieur -->
+                    <path d="M16 1L2 7v10c0 8.5 5.8 16.4 14 18.9C24.2 33.4 30 25.5 30 17V7L16 1z" stroke="white"
+                        stroke-width="1.5" fill="none" stroke-linejoin="round" />
+                    <!-- Bouclier intérieur -->
+                    <path d="M16 5L6 9.5V17c0 6 4 11.5 10 13.5 6-2 10-7.5 10-13.5V9.5L16 5z" stroke="white"
+                        stroke-width="0.75" stroke-opacity="0.3" fill="none" stroke-linejoin="round" />
+                    <!-- Lettre W -->
+                    <path d="M9 13l3 9 4-6 4 6 3-9" stroke="white" stroke-width="1.8" stroke-linecap="round"
+                        stroke-linejoin="round" fill="none" />
+                    <!-- Accent néon — pointe du A -->
+                    <path d="M13 19l3-6 3 6" stroke="#39d353" stroke-width="1.5" stroke-linecap="round"
+                        stroke-linejoin="round" fill="none" />
+                    <!-- Trait horizontal du A -->
+                    <path d="M14.2 17.5h3.6" stroke="#39d353" stroke-width="1.2" stroke-linecap="round" />
+                </svg>
+                <span
+                    class="font-mono text-white font-medium text-base tracking-tight group-hover:text-neon transition-colors duration-150">
+                    WP_Architect<span class="text-neon">.</span>
+                </span>
+            </a>
+
+            <!-- Nav links — desktop -->
+            <nav class="hidden md:flex items-center gap-8">
+                <a href="#how-it-works"
+                    class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Comment ça marche</a>
+                <a href="#pricing"
+                    class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Tarifs</a>
+                <a href="#faq" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">FAQ</a>
+                <a href="#about" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">À propos</a>
+                <a href="#contact" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Contact</a>
+            </nav>
+
+            <!-- CTA navbar -->
+            <a href="#pricing"
+                class="btn-neon hidden md:inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-neon text-dark-900 font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-white">
+                Démarrer
+            </a>
+
+            <!-- Burger mobile -->
+            <button id="menu-toggle" class="md:hidden flex flex-col gap-1.5 p-1" aria-label="Menu"
+                aria-expanded="false">
+                <span class="burger-line block w-5 h-px bg-slate-400 transition-all duration-300 origin-center"></span>
+                <span class="burger-line block w-5 h-px bg-slate-400 transition-all duration-300 origin-center"></span>
+                <span class="burger-line block w-5 h-px bg-slate-400 transition-all duration-300 origin-center"></span>
+            </button>
+
+        </div>
+
+        <!-- Menu mobile -->
+        <div id="mobile-menu"
+            class="md:hidden max-h-0 overflow-hidden transition-all duration-300 ease-in-out bg-dark-800 border-t border-dark-500">
+            <nav class="flex flex-col px-6 py-4 gap-4">
+                <a href="#how-it-works"
+                    class="mobile-link text-slate-300 text-sm py-1 hover:text-white transition-colors">Comment ça
+                    marche</a>
+                <a href="#pricing"
+                    class="mobile-link text-slate-300 text-sm py-1 hover:text-white transition-colors">Tarifs</a>
+                <a href="#faq"
+                    class="mobile-link text-slate-300 text-sm py-1 hover:text-white transition-colors">FAQ</a>
+                <a href="#about" class="mobile-link text-slate-300 text-sm py-1 hover:text-white transition-colors">À propos</a>
+                <a href="#contact" class="mobile-link text-slate-300 text-sm py-1 hover:text-white transition-colors">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ===================== CONTENU PRINCIPAL ===================== -->
+    <main>
+
+        <!-- HERO -->
+        <section id="hero"
+            class="hero-grid hero-glow relative min-h-screen flex items-center justify-center pt-20 px-4 overflow-hidden">
+            <!-- Vignette edges -->
+            <div
+                class="pointer-events-none absolute inset-0 bg-gradient-to-b from-dark-800 via-transparent to-dark-800">
+            </div>
+
+            <div class="relative z-10 max-w-5xl mx-auto text-center">
+
+                <!-- Logo hero + Texte principal côte à côte -->
+                <div
+                    class="fade-up fade-up-1 inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full border border-neon/20 bg-neon/5 font-mono text-xs text-neon tracking-widest uppercase">
+                    <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-neon"></span>
+                    Système opérationnel — 99.9% uptime
+                </div>
+
+                <!-- Headline + Logo -->
+                <div
+                    class="fade-up fade-up-2 flex flex-col md:flex-row items-center justify-center gap-8 md:gap-12 mb-6">
+
+                    <!-- Texte -->
+                    <div class="text-center md:text-left">
+                        <h1
+                            class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-white leading-tight tracking-tight mb-6">
+                            Votre WordPress,<br />
+                            <span class="text-neon">blindé.</span> En permanence.
+                        </h1>
+                        <p class="fade-up fade-up-3 max-w-xl text-slate-400 text-lg sm:text-xl leading-relaxed">
+                            Mises à jour, sauvegardes quotidiennes, monitoring de sécurité et corrections techniques —
+                            livrés sous abonnement mensuel fixe. Pas d'appels. Pas de surprises.
+                        </p>
+                    </div>
+
+                    <!-- Logo externe — placer logo.png dans le même dossier que index.html -->
+                    <div class="flex-shrink-0 flex items-center justify-center">
+                        <img src="logo.png" alt="WP_Architect. logo" width="240" height="240"
+                            class="w-72 h-72 sm:w-80 sm:h-80 md:w-96 md:h-96 object-contain drop-shadow-[0_0_32px_rgba(57,211,83,0.3)]"
+                            style="width:420px;height:420px;max-width:100%;" />
+                    </div>
+
+                </div>
+
+                <!-- CTA -->
+                <div class="fade-up fade-up-4 flex flex-col sm:flex-row items-center justify-center gap-4 mb-16">
+                    <a href="#pricing"
+                        class="btn-neon group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg bg-neon text-dark-900 font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-white">
+                        Voir les formules
+                        <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none"
+                            stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </a>
+                    <a href="#how-it-works"
+                        class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg border border-dark-500 text-slate-300 font-medium text-sm tracking-wide transition-all duration-200 hover:border-neon/40 hover:text-white">
+                        Comment ça marche
+                    </a>
+                </div>
+
+                <!-- Terminal de monitoring -->
+                <div
+                    class="fade-up fade-up-5 max-w-2xl mx-auto rounded-xl border border-dark-500 bg-dark-700 overflow-hidden text-left shadow-2xl">
+
+                    <!-- Barre de titre terminal -->
+                    <div class="flex items-center gap-2 px-4 py-3 border-b border-dark-500 bg-dark-900">
+                        <span class="w-3 h-3 rounded-full bg-red-500/70"></span>
+                        <span class="w-3 h-3 rounded-full bg-yellow-500/70"></span>
+                        <span class="w-3 h-3 rounded-full bg-neon/70"></span>
+                        <span class="ml-3 font-mono text-xs text-slate-500 tracking-wide">wp_architect —
+                            monitoring.sh</span>
+                    </div>
+
+                    <!-- Contenu terminal -->
+                    <div class="p-5 font-mono text-xs sm:text-sm leading-relaxed space-y-1">
+                        <p class="term-line"><span class="text-slate-500">$</span> <span class="text-neon">wp</span>
+                            core check-update</p>
+                        <p class="term-line text-slate-400">Checking for WordPress updates...</p>
+                        <p class="term-line"><span class="text-neon">✓</span> <span class="text-slate-300">WordPress
+                                6.7.1</span> <span class="text-slate-500">— up to date</span></p>
+                        <p class="term-line"><span class="text-slate-500">$</span> <span class="text-neon">wp</span>
+                            plugin list --update=available</p>
+                        <p class="term-line"><span class="text-neon">✓</span> <span class="text-slate-300">0
+                                plugins</span> <span class="text-slate-500">require update</span></p>
+                        <p class="term-line"><span class="text-slate-500">$</span> <span class="text-neon">backup</span>
+                            --snapshot daily</p>
+                        <p class="term-line">
+                            <span class="text-neon">✓</span>
+                            <span class="text-slate-300">Snapshot</span>
+                            <span class="text-slate-500">created — </span>
+                            <span class="text-neon">2026-05-31 03:00 UTC</span>
+                            <span class="cursor-blink text-neon ml-0.5">█</span>
+                        </p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- LE PROBLÈME -->
+        <section class="py-20 px-4 border-t border-dark-500">
+            <div class="max-w-4xl mx-auto">
+                <div class="reveal text-center mb-12">
+                    <p class="font-mono text-xs text-neon tracking-widest uppercase mb-4">// Le problème</p>
+                    <h2 class="text-2xl sm:text-3xl font-semibold text-white tracking-tight">
+                        Votre site WordPress est une responsabilité.<br class="hidden sm:block" />
+                        <span class="text-slate-400">Pas une priorité pour votre développeur.</span>
+                    </h2>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+
+                    <div class="step-card reveal reveal-delay-1 text-center">
+                        <div class="text-2xl mb-4">🔓</div>
+                        <h3 class="text-white font-semibold text-sm mb-2">Un site non mis à jour</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            est une cible ouverte pour les pirates. 95% des sites WordPress hackés n'étaient pas à jour.
+                        </p>
+                    </div>
+
+                    <div class="step-card reveal reveal-delay-2 text-center">
+                        <div class="text-2xl mb-4">🐌</div>
+                        <h3 class="text-white font-semibold text-sm mb-2">Un site lent</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            fait fuir vos clients. À Dakar comme ailleurs, chaque seconde de chargement supplémentaire
+                            coûte des conversions.
+                        </p>
+                    </div>
+
+                    <div class="step-card reveal reveal-delay-3 text-center">
+                        <div class="text-2xl mb-4">📵</div>
+                        <h3 class="text-white font-semibold text-sm mb-2">Votre développeur</h3>
+                        <p class="text-slate-500 text-sm leading-relaxed">
+                            n'a plus le temps, est injoignable, ou facture chaque petite modification. Il vous faut un
+                            plan fixe et fiable.
+                        </p>
+                    </div>
+
+                </div>
+
+                <!-- Ligne de conclusion -->
+                <p
+                    class="reveal text-center mt-10 text-slate-400 text-sm sm:text-base max-w-xl mx-auto leading-relaxed">
+                    Je prends le relais. Un abonnement mensuel fixe, une communication par écrit, zéro surprise.
+                </p>
+            </div>
+        </section>
+
+        <!-- COMMENT ÇA MARCHE -->
+        <section id="how-it-works" class="py-28 px-4 border-t border-dark-500">
+            <div class="max-w-5xl mx-auto">
+
+                <!-- En-tête section -->
+                <div class="text-center mb-20 reveal">
+                    <p class="font-mono text-xs text-neon tracking-widest uppercase mb-4">// Processus</p>
+                    <h2 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight mb-4">
+                        Simple par conception
+                    </h2>
+                    <p class="text-slate-400 max-w-xl mx-auto text-base sm:text-lg">
+                        Quatre étapes. Pas de réunions, pas d'ambiguïté. Vous gardez le contrôle, on gère la technique.
+                    </p>
+                </div>
+
+                <!-- Grille des étapes -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+
+                    <!-- Étape 1 -->
+                    <div class="step-card reveal reveal-delay-1">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number">01</div>
+                            <div>
+                                <h3 class="text-white font-semibold text-base mb-2">Vous choisissez une formule</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Sélectionnez le plan adapté à votre site. Paiement mensuel sécurisé. Aucun
+                                    engagement long terme.
+                                </p>
+                                <div
+                                    class="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-neon/60"></span>
+                                    Résiliation à tout moment
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Étape 2 -->
+                    <div class="step-card reveal reveal-delay-2">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number">02</div>
+                            <div>
+                                <h3 class="text-white font-semibold text-base mb-2">Onboarding technique en 24h</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Vous recevez un formulaire d'accès sécurisé. On audite votre installation et on
+                                    prend la main sur votre WordPress.
+                                </p>
+                                <div
+                                    class="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-neon/60"></span>
+                                    Aucun accès FTP partagé non chiffré
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Étape 3 -->
+                    <div class="step-card reveal reveal-delay-3">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number">03</div>
+                            <div>
+                                <h3 class="text-white font-semibold text-base mb-2">Vous soumettez vos tickets sur
+                                    Trello</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Besoin d'une correction, d'un ajustement CSS, d'un plugin à configurer ? Créez une
+                                    carte. On traite dans les délais de votre formule.
+                                </p>
+                                <div
+                                    class="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-neon/60"></span>
+                                    Tout est écrit. Rien n'est verbal.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Étape 4 -->
+                    <div class="step-card reveal reveal-delay-4">
+                        <div class="flex items-start gap-4">
+                            <div class="step-number">04</div>
+                            <div>
+                                <h3 class="text-white font-semibold text-base mb-2">Monitoring &amp; rapports
+                                    automatiques</h3>
+                                <p class="text-slate-400 text-sm leading-relaxed">
+                                    Mises à jour, sauvegardes, alertes de sécurité — tout tourne en arrière-plan. Vous
+                                    recevez un rapport mensuel.
+                                </p>
+                                <div
+                                    class="mt-4 inline-flex items-center gap-1.5 font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">
+                                    <span class="w-1.5 h-1.5 rounded-full bg-neon/60 pulse-dot"></span>
+                                    Actif 24h/24 — 7j/7
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Ligne de réassurance bas de section -->
+                <div
+                    class="reveal mt-14 pt-10 border-t border-dark-500 grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+                    <div>
+                        <p class="font-mono text-2xl font-medium text-white mb-1">99.9%</p>
+                        <p class="text-slate-500 text-xs uppercase tracking-wider">Uptime garanti</p>
+                    </div>
+                    <div>
+                        <p class="font-mono text-2xl font-medium text-white mb-1">&lt; 24h</p>
+                        <p class="text-slate-500 text-xs uppercase tracking-wider">Temps de réponse</p>
+                    </div>
+                    <div>
+                        <p class="font-mono text-2xl font-medium text-white mb-1">Daily</p>
+                        <p class="text-slate-500 text-xs uppercase tracking-wider">Sauvegardes</p>
+                    </div>
+                    <div>
+                        <p class="font-mono text-2xl font-medium text-white mb-1">0</p>
+                        <p class="text-slate-500 text-xs uppercase tracking-wider">Appel requis</p>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+
+        <!-- TECHNOLOGIES MAÎTRISÉES -->
+        <section class="py-14 px-4 border-t border-dark-500">
+            <div class="max-w-5xl mx-auto">
+                <p class="text-center font-mono text-xs text-slate-600 uppercase tracking-widest mb-8 reveal">
+                    // Compatible avec vos outils
+                </p>
+                <div class="flex flex-wrap justify-center items-center gap-x-8 gap-y-4 reveal">
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">WooCommerce</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">Elementor</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">Divi</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">Yoast
+                        SEO</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">Wordfence</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">LiteSpeed
+                        Cache</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">o2switch</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">Kinsta</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">WP
+                        Rocket</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">ACF</span>
+                    <span class="text-dark-600 select-none">·</span>
+                    <span
+                        class="font-mono text-xs text-slate-500 hover:text-slate-300 transition-colors duration-150 cursor-default">Cloudways</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- TARIFS -->
+        <section id="pricing" class="py-28 px-4 bg-dark-900 border-t border-dark-500">
+            <div class="max-w-5xl mx-auto">
+
+                <!-- En-tête -->
+                <div class="text-center mb-16 reveal">
+                    <p class="font-mono text-xs text-neon tracking-widest uppercase mb-4">// Tarifs</p>
+                    <h2 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight mb-4">
+                        Un prix fixe. Aucune surprise.
+                    </h2>
+                    <p class="text-slate-400 max-w-xl mx-auto text-base sm:text-lg">
+                        Pas de devis, pas d'heure facturée. Vous savez exactement ce que vous payez chaque mois.
+                    </p>
+                </div>
+
+                <!-- Grille des plans -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-5 items-stretch">
+
+                    <!-- Plan Essentiel -->
+                    <div class="step-card flex flex-col reveal reveal-delay-1">
+                        <div class="mb-6">
+                            <p class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-3">Essentiel</p>
+                            <div class="flex items-end gap-2 mb-1">
+                                <span class="font-mono text-3xl font-medium text-white">19 000 F</span>
+                                <span class="text-slate-500 text-sm mb-1.5">/mois</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Pour les blogs et sites vitrines.</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Mises à jour core + plugins + thèmes
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Sauvegarde quotidienne (rétention 14j)
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Scan malware hebdomadaire
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Rapport mensuel
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-400">
+                                <span class="text-dark-500 mt-0.5 flex-shrink-0">–</span>
+                                <span class="text-slate-600">Tickets de modification</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-400">
+                                <span class="text-dark-500 mt-0.5 flex-shrink-0">–</span>
+                                <span class="text-slate-600">Monitoring uptime 24/7</span>
+                            </li>
+                        </ul>
+                        <a href="mailto:tbara2671@gmail.com?subject=Activation%20Plan%20Essentiel%20-%20WP_Architect&body=Bonjour%20Sereigne%2C%20je%20souhaite%20activer%20le%20plan%20Essentiel%20(19%20000%20F%2Fmois)%20pour%20mon%20site%20WordPress."
+                            class="w-full text-center py-3 rounded-lg border border-dark-500 text-slate-300 font-medium text-sm tracking-wide transition-all duration-200 hover:border-neon/40 hover:text-white">
+                            Choisir Essentiel
+                        </a>
+                    </div>
+
+                    <!-- Plan Pro — mis en avant -->
+                    <div class="relative flex flex-col reveal reveal-delay-2"
+                        style="background:#0f1520; border:1px solid rgba(57,211,83,0.35); border-radius:12px; padding:1.75rem; box-shadow: 0 0 40px rgba(57,211,83,0.08);">
+                        <!-- Badge -->
+                        <div class="absolute -top-3.5 left-1/2 -translate-x-1/2">
+                            <span
+                                class="font-mono text-xs text-dark-900 bg-neon px-4 py-1 rounded-full font-medium tracking-wide whitespace-nowrap">
+                                Recommandé
+                            </span>
+                        </div>
+                        <div class="mb-6 mt-2">
+                            <p class="font-mono text-xs text-neon uppercase tracking-widest mb-3">Pro</p>
+                            <div class="flex items-end gap-2 mb-1">
+                                <span class="font-mono text-3xl font-medium text-white">45 000 F</span>
+                                <span class="text-slate-500 text-sm mb-1.5">/mois</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Pour les PME et e-commerces actifs.</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Tout le plan Essentiel
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Sauvegarde quotidienne (rétention 30j)
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Monitoring uptime 24/7 + alertes
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                <span><strong class="text-white font-medium">2 tickets</strong> de modification /
+                                    mois</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Délai de traitement &lt; 48h
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Scan malware quotidien
+                            </li>
+                        </ul>
+                        <a href="mailto:tbara2671@gmail.com?subject=Activation%20Plan%20Pro%20-%20WP_Architect&body=Bonjour%20Sereigne%2C%20je%20souhaite%20activer%20le%20plan%20Pro%20(45%20000%20F%2Fmois)%20pour%20mon%20site%20WordPress."
+                            class="btn-neon w-full text-center py-3 rounded-lg bg-neon text-dark-900 font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-white">
+                            Choisir Pro
+                        </a>
+                    </div>
+
+                    <!-- Plan Agence -->
+                    <div class="step-card flex flex-col reveal reveal-delay-3">
+                        <div class="mb-6">
+                            <p class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-3">Agence</p>
+                            <div class="flex items-end gap-2 mb-1">
+                                <span class="font-mono text-3xl font-medium text-white">99 000 F</span>
+                                <span class="text-slate-500 text-sm mb-1.5">/mois</span>
+                            </div>
+                            <p class="text-slate-500 text-sm">Pour les agences et sites critiques.</p>
+                        </div>
+                        <ul class="space-y-3 mb-8 flex-1">
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Tout le plan Pro
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                <span><strong class="text-white font-medium">8 tickets</strong> de modification /
+                                    mois</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Délai de traitement &lt; 24h
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Sauvegarde quotidienne (rétention 60j)
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Audit de sécurité trimestriel
+                            </li>
+                            <li class="flex items-start gap-3 text-sm text-slate-300">
+                                <span class="text-neon mt-0.5 flex-shrink-0">✓</span>
+                                Accès prioritaire &amp; rapport hebdomadaire
+                            </li>
+                        </ul>
+                        <a href="mailto:tbara2671@gmail.com?subject=Activation%20Plan%20Agence%20-%20WP_Architect&body=Bonjour%20Sereigne%2C%20je%20souhaite%20activer%20le%20plan%20Agence%20(99%20000%20F%2Fmois)%20pour%20mes%20sites%20WordPress."
+                            class="w-full text-center py-3 rounded-lg border border-dark-500 text-slate-300 font-medium text-sm tracking-wide transition-all duration-200 hover:border-neon/40 hover:text-white">
+                            Choisir Agence
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Périmètre des tickets -->
+                <div
+                    class="reveal mt-10 rounded-xl border border-dark-500 bg-dark-700 p-6 grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div>
+                        <p class="font-mono text-xs text-neon uppercase tracking-widest mb-4">✓ Inclus dans un ticket
+                        </p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-slate-400">
+                                <span class="text-neon flex-shrink-0 mt-0.5">·</span>Changer un logo ou une image
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-400">
+                                <span class="text-neon flex-shrink-0 mt-0.5">·</span>Ajustement CSS / mise en page
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-400">
+                                <span class="text-neon flex-shrink-0 mt-0.5">·</span>Installation et configuration
+                                d'extension
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-400">
+                                <span class="text-neon flex-shrink-0 mt-0.5">·</span>Correction d'un bug d'affichage
+                                mobile
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-400">
+                                <span class="text-neon flex-shrink-0 mt-0.5">·</span>Modification de texte ou de
+                                formulaire
+                            </li>
+                        </ul>
+                    </div>
+                    <div>
+                        <p class="font-mono text-xs text-slate-500 uppercase tracking-widest mb-4">✗ Hors périmètre</p>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-2 text-sm text-slate-500">
+                                <span class="flex-shrink-0 mt-0.5">·</span>Refonte complète du site
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-500">
+                                <span class="flex-shrink-0 mt-0.5">·</span>Développement d'un plugin sur-mesure
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-500">
+                                <span class="flex-shrink-0 mt-0.5">·</span>Création de contenu textuel ou graphique
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-500">
+                                <span class="flex-shrink-0 mt-0.5">·</span>Intégration e-commerce complexe
+                            </li>
+                            <li class="flex items-start gap-2 text-sm text-slate-500">
+                                <span class="flex-shrink-0 mt-0.5">·</span>Migration complète d'hébergeur
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Note bas de section -->
+                <p class="reveal text-center text-slate-600 text-xs font-mono mt-10 tracking-wide">
+                    Paiement sécurisé · Facturation mensuelle · Résiliation sans frais · Tarifs Nets
+                </p>
+
+            </div>
+        </section>
+
+        <!-- FAQ -->
+        <section id="faq" class="py-28 px-4 border-t border-dark-500">
+            <div class="max-w-2xl mx-auto">
+
+                <!-- En-tête -->
+                <div class="text-center mb-16 reveal">
+                    <p class="font-mono text-xs text-neon tracking-widest uppercase mb-4">// FAQ</p>
+                    <h2 class="text-3xl sm:text-4xl font-semibold text-white tracking-tight mb-4">
+                        Questions directes.<br />Réponses directes.
+                    </h2>
+                </div>
+
+                <!-- Accordéon -->
+                <div class="space-y-2" id="faq-list">
+
+                    <div
+                        class="faq-item reveal reveal-delay-1 border border-dark-500 rounded-xl overflow-hidden transition-colors duration-200 hover:border-dark-600">
+                        <button class="faq-trigger w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                            aria-expanded="false">
+                            <span class="text-slate-200 font-medium text-sm sm:text-base">Dois-je vous donner accès à
+                                mon hébergeur ?</span>
+                            <span
+                                class="faq-icon flex-shrink-0 w-5 h-5 rounded-full border border-dark-500 flex items-center justify-center transition-all duration-300 text-slate-500">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                                    <path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-body max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                                Oui, mais de manière sécurisée. Vous transmettrez vos accès via un formulaire chiffré
+                                lors de l'onboarding. Nous n'utilisons jamais le FTP en clair — uniquement SFTP ou accès
+                                wp-admin dédié avec compte limité.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="faq-item reveal reveal-delay-2 border border-dark-500 rounded-xl overflow-hidden transition-colors duration-200 hover:border-dark-600">
+                        <button class="faq-trigger w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                            aria-expanded="false">
+                            <span class="text-slate-200 font-medium text-sm sm:text-base">Qu'est-ce qu'un "ticket de
+                                modification" exactement ?</span>
+                            <span
+                                class="faq-icon flex-shrink-0 w-5 h-5 rounded-full border border-dark-500 flex items-center justify-center transition-all duration-300 text-slate-500">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                                    <path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-body max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                                Une demande technique discrète soumise via Trello : ajustement CSS, configuration de
+                                plugin, correction d'affichage, ajout d'un bloc, etc. Pas de refonte, pas de nouvelle
+                                fonctionnalité complexe. Si votre demande dépasse le cadre, vous en êtes informé avec un
+                                devis séparé.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="faq-item reveal reveal-delay-3 border border-dark-500 rounded-xl overflow-hidden transition-colors duration-200 hover:border-dark-600">
+                        <button class="faq-trigger w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                            aria-expanded="false">
+                            <span class="text-slate-200 font-medium text-sm sm:text-base">Que se passe-t-il si mon site
+                                est piraté ?</span>
+                            <span
+                                class="faq-icon flex-shrink-0 w-5 h-5 rounded-full border border-dark-500 flex items-center justify-center transition-all duration-300 text-slate-500">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                                    <path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-body max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                                Sur les plans Pro et Agence, le monitoring détecte les anomalies avant que la situation
+                                ne soit critique. En cas d'incident avéré, on restaure depuis la dernière sauvegarde
+                                saine et on nettoie les fichiers infectés. Les clients Essentiel bénéficient de la
+                                restauration manuelle sur demande.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="faq-item reveal reveal-delay-4 border border-dark-500 rounded-xl overflow-hidden transition-colors duration-200 hover:border-dark-600">
+                        <button class="faq-trigger w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                            aria-expanded="false">
+                            <span class="text-slate-200 font-medium text-sm sm:text-base">Puis-je changer de plan ou
+                                résilier ?</span>
+                            <span
+                                class="faq-icon flex-shrink-0 w-5 h-5 rounded-full border border-dark-500 flex items-center justify-center transition-all duration-300 text-slate-500">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                                    <path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-body max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                                Oui, absolument. Vous pouvez demander un upgrade ou un downgrade de votre plan à tout moment. 
+                                La modification sera effective dès le prochain cycle de facturation mensuelle. 
+                                Pour résilier, il n'y a aucun frais ni préavis : envoyez-nous simplement un message ou créez un ticket sur votre espace privé. 
+                                Votre maintenance et votre accès Trello resteront actifs jusqu'à la fin de la période déjà payée.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div
+                        class="faq-item reveal border border-dark-500 rounded-xl overflow-hidden transition-colors duration-200 hover:border-dark-600">
+                        <button class="faq-trigger w-full flex items-center justify-between gap-4 px-6 py-5 text-left"
+                            aria-expanded="false">
+                            <span class="text-slate-200 font-medium text-sm sm:text-base">Travaillez-vous avec tous les
+                                hébergeurs WordPress ?</span>
+                            <span
+                                class="faq-icon flex-shrink-0 w-5 h-5 rounded-full border border-dark-500 flex items-center justify-center transition-all duration-300 text-slate-500">
+                                <svg width="10" height="10" viewBox="0 0 10 10" fill="none" aria-hidden="true">
+                                    <path d="M5 1v8M1 5h8" stroke="currentColor" stroke-width="1.5"
+                                        stroke-linecap="round" />
+                                </svg>
+                            </span>
+                        </button>
+                        <div class="faq-body max-h-0 overflow-hidden transition-all duration-300 ease-in-out">
+                            <p class="px-6 pb-5 text-slate-400 text-sm leading-relaxed">
+                                Oui — o2switch, OVH, Hostinger, WP Engine, Kinsta, Cloudways, et la majorité des
+                                hébergeurs mutualisés ou VPS compatibles WordPress. Si vous avez un doute sur votre
+                                hébergeur, posez la question avant de souscrire.
+                            </p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+
+    <!-- À PROPOS -->
+    <section id="about" class="py-28 px-4 border-t border-dark-500">
+        <div class="max-w-2xl mx-auto reveal">
+
+            <p class="font-mono text-xs text-neon tracking-widest uppercase mb-8 text-center">// À propos</p>
+
+            <div class="step-card">
+                <div class="flex items-start gap-5">
+
+                    <!-- Photo de profil -->
+                    <div class="flex-shrink-0">
+                        <img src="bara.jpeg" alt="Sereigne Bara Thiam" width="80" height="80"
+                            class="w-16 h-16 sm:w-20 sm:h-20 rounded-full object-cover object-top border border-neon/20 grayscale" />
+                    </div>
+
+                    <div>
+                        <p class="text-white font-semibold text-base mb-1">Sereigne Bara Thiam</p>
+                        <p class="font-mono text-xs text-slate-500 mb-4">Étudiant en Génie Informatique · Dakar, Sénégal
+                        </p>
+                        <p class="text-slate-400 text-sm leading-relaxed mb-4">
+                            Spécialiste de l'architecture et de la maintenance WordPress. Je gère la technique pour que
+                            vous puissiez vous concentrer sur votre activité — sans jargon, sans appels inutiles, sans
+                            mauvaises surprises.
+                        </p>
+                        <div class="flex flex-wrap gap-2">
+                            <span
+                                class="font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">WordPress</span>
+                            <span
+                                class="font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">Sécurité
+                                Web</span>
+                            <span
+                                class="font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">Performance</span>
+                            <span
+                                class="font-mono text-xs text-neon/70 bg-neon/5 border border-neon/10 rounded-md px-3 py-1.5">Maintenance</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+    <!-- ===================== CTA FINAL ===================== -->
+    <section class="relative py-28 px-4 overflow-hidden border-t border-dark-500">
+
+        <!-- Halo radial centré -->
+        <div class="pointer-events-none absolute inset-0 hero-glow"></div>
+        <!-- Grid de fond -->
+        <div class="pointer-events-none absolute inset-0 hero-grid opacity-40"></div>
+
+        <div class="relative z-10 max-w-2xl mx-auto text-center reveal">
+
+            <!-- Badge -->
+            <div
+                class="inline-flex items-center gap-2 mb-8 px-4 py-1.5 rounded-full border border-neon/20 bg-neon/5 font-mono text-xs text-neon tracking-widest uppercase">
+                <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-neon"></span>
+                Disponible maintenant
+            </div>
+
+            <h2 class="text-3xl sm:text-4xl md:text-5xl font-semibold text-white tracking-tight leading-tight mb-6">
+                Votre WordPress mérite<br />
+                <span class="text-neon">mieux que l'improvisation.</span>
+            </h2>
+
+            <p class="text-slate-400 text-base sm:text-lg leading-relaxed mb-10 max-w-lg mx-auto">
+                Choisissez votre formule, soumettez vos accès en 5 minutes. On prend le relais dès aujourd'hui.
+            </p>
+
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#pricing"
+                    class="btn-neon group w-full sm:w-auto inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-lg bg-neon text-dark-900 font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-white">
+                    Choisir une formule
+                    <svg class="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5" fill="none"
+                        stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                    </svg>
+                </a>
+                <a href="#faq"
+                    class="w-full sm:w-auto inline-flex items-center justify-center px-8 py-3.5 rounded-lg border border-dark-500 text-slate-300 font-medium text-sm tracking-wide transition-all duration-200 hover:border-neon/40 hover:text-white">
+                    Encore des questions ?
+                </a>
+            </div>
+
+            <!-- Réassurance minimaliste -->
+            <p class="mt-10 font-mono text-xs text-slate-600 tracking-wide">
+                Sans engagement · Résiliation en 1 clic · Réponse sous 24h
+            </p>
+
+        </div>
+    </section>
+
+    <!-- SECTION CONTACT ÉPURÉE -->
+    <section id="contact" class="py-28 px-4 bg-dark-900 border-t border-dark-500">
+        <div class="max-w-3xl mx-auto">
+
+            <!-- En-tête -->
+            <div class="text-center mb-12 reveal">
+                <p class="font-mono text-xs text-neon tracking-widest uppercase mb-4">// Contact & Collaborations</p>
+                <h2 class="text-3xl font-semibold text-white tracking-tight mb-4">
+                    Prêt à sécuriser votre site ?
+                </h2>
+                <p class="text-slate-400 max-w-xl mx-auto text-sm sm:text-base">
+                    Vous avez reçu un rapport d'audit ou vous souhaitez externaliser la maintenance technique de vos
+                    sites WordPress ? Allons droit au but.
+                </p>
+            </div>
+
+            <!-- Blocs de contact direct -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 reveal reveal-delay-1">
+
+                <!-- Canal Émail -->
+                <div class="flex flex-col justify-between p-6 rounded-xl border border-dark-500"
+                    style="background:#0f1520;">
+                    <div class="mb-6">
+                        <div class="text-neon font-mono text-xs uppercase tracking-wider mb-2">[ Canal Principal ]</div>
+                        <h3 class="text-lg font-medium text-white mb-2">Par Email</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Pour l'envoi de vos accès temporaires, l'analyse technique de votre infrastructure ou vos
+                            questions de tarification.
+                        </p>
+                    </div>
+                    <a href="mailto:tbara2671@gmail.com?subject=Demande%20de%20maintenance%20WP_Architect"
+                        class="w-full text-center py-3 rounded-lg bg-neon text-dark-900 font-semibold text-sm tracking-wide transition-all duration-200 hover:bg-white">
+                        Envoyer un email
+                    </a>
+                </div>
+
+                <!-- Canal LinkedIn -->
+                <div class="flex flex-col justify-between p-6 rounded-xl border border-dark-500"
+                    style="background:#0f1520;">
+                    <div class="mb-6">
+                        <div class="text-slate-500 font-mono text-xs uppercase tracking-wider mb-2">[ Profil
+                            Professionnel ]</div>
+                        <h3 class="text-lg font-medium text-white mb-2">Via LinkedIn</h3>
+                        <p class="text-xs text-slate-500 leading-relaxed">
+                            Pour vérifier mon parcours en génie informatique, valider mon identité ou échanger de
+                            manière asynchrone.
+                        </p>
+                    </div>
+                    <a href="https://www.linkedin.com/in/sereigne-bara-thiam-3600062b5/" target="_blank" rel="noopener noreferrer"
+                        class="w-full text-center py-3 rounded-lg border border-dark-500 text-slate-300 font-medium text-sm tracking-wide transition-all duration-200 hover:border-neon/40 hover:text-white">
+                        Voir le profil ↗
+                    </a>
+                </div>
+
+            </div>
+
+            <!-- Note d'infrastructure -->
+            <div
+                class="reveal reveal-delay-2 mt-8 p-4 rounded-lg bg-dark-800/30 border border-dashed border-dark-500 text-center">
+                <p class="text-xs text-slate-500 font-mono">
+                    <span class="text-neon">⚡ Workflow :</span> Après validation de votre plan, un tableau de bord
+                    <strong class="text-white font-medium">Trello privé</strong> est initialisé en 10 minutes pour
+                    centraliser et suivre vos demandes de tickets.
+                </p>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ===================== FOOTER ===================== -->
+    <footer class="border-t border-dark-500 px-4 pt-16 pb-10">
+        <div class="max-w-5xl mx-auto">
+
+            <!-- Grille principale -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-10 mb-14">
+
+                <!-- Col 1 — Marque -->
+                <div class="md:col-span-2">
+                    <div class="flex items-center gap-2.5 mb-3">
+                        <svg width="28" height="32" viewBox="0 0 32 36" fill="none" xmlns="http://www.w3.org/2000/svg"
+                            aria-hidden="true" class="flex-shrink-0">
+                            <path d="M16 1L2 7v10c0 8.5 5.8 16.4 14 18.9C24.2 33.4 30 25.5 30 17V7L16 1z" stroke="white"
+                                stroke-width="1.5" fill="none" stroke-linejoin="round" />
+                            <path d="M16 5L6 9.5V17c0 6 4 11.5 10 13.5 6-2 10-7.5 10-13.5V9.5L16 5z" stroke="white"
+                                stroke-width="0.75" stroke-opacity="0.3" fill="none" stroke-linejoin="round" />
+                            <path d="M9 13l3 9 4-6 4 6 3-9" stroke="white" stroke-width="1.8" stroke-linecap="round"
+                                stroke-linejoin="round" fill="none" />
+                            <path d="M13 19l3-6 3 6" stroke="#39d353" stroke-width="1.5" stroke-linecap="round"
+                                stroke-linejoin="round" fill="none" />
+                            <path d="M14.2 17.5h3.6" stroke="#39d353" stroke-width="1.2" stroke-linecap="round" />
+                        </svg>
+                        <p class="font-mono text-white font-medium text-lg tracking-tight">
+                            WP_Architect<span class="text-neon">.</span>
+                        </p>
+                    </div>
+                    <p class="text-slate-500 text-sm leading-relaxed max-w-xs">
+                        Maintenance technique, sécurité et sauvegardes WordPress sous abonnement mensuel fixe. Aucun
+                        appel requis.
+                    </p>
+                    <!-- Statut système -->
+                    <div class="mt-6 inline-flex items-center gap-2 font-mono text-xs text-slate-500">
+                        <span class="pulse-dot w-1.5 h-1.5 rounded-full bg-neon flex-shrink-0"></span>
+                        Tous les systèmes opérationnels
+                    </div>
+                </div>
+
+                <!-- Col 2 — Navigation -->
+                <div>
+                    <p class="font-mono text-xs text-slate-600 uppercase tracking-widest mb-5">Navigation</p>
+                    <ul class="space-y-3">
+                        <li><a href="#how-it-works"
+                                class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Comment
+                                ça marche</a></li>
+                        <li><a href="#pricing"
+                                class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Tarifs</a>
+                        </li>
+                        <li><a href="#faq"
+                                class="text-slate-400 text-sm hover:text-white transition-colors duration-150">FAQ</a>
+                        </li>
+                        <li><a href="#contact" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Contact</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3 — Légal -->
+                <div>
+                    <p class="font-mono text-xs text-slate-600 uppercase tracking-widest mb-5">Légal</p>
+                    <ul class="space-y-3">
+                        <li><a href="#" onclick="openModal('modal-mentions'); return false;" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Mentions légales</a></li>
+                        <li><a href="#" onclick="openModal('modal-cgv'); return false;" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">CGV</a>
+                        </li>
+                        <li><a href="#" onclick="openModal('modal-privacy'); return false;" class="text-slate-400 text-sm hover:text-white transition-colors duration-150">Politique de confidentialité</a></li>
+                    </ul>
+                </div>
+
+            </div>
+
+            <!-- Séparateur -->
+            <div class="border-t border-dark-500 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+                <p class="font-mono text-xs text-slate-600 tracking-wide">
+                    © 2026 WP_Architect. — Tous droits réservés
+                </p>
+                <p class="font-mono text-xs text-slate-700 tracking-wide">
+                    Conçu &amp; développé par Sereigne Bara Thiam
+                </p>
+            </div>
+
+        </div>
+    </footer>
+
+    <!-- ===================== SCRIPTS ===================== -->
+    <!--
+      Navbar scroll effect : ajoute .navbar-scrolled au scroll
+      Inline JS minimal — pas de librairie externe
+    -->
+    <script>
+        const navbar = document.getElementById("navbar");
+        window.addEventListener("scroll", () => {
+            navbar.classList.toggle("navbar-scrolled", window.scrollY > 20);
+        }, { passive: true });
+
+        // Scroll-reveal — IntersectionObserver (0 layout thrashing)
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add("visible");
+                    observer.unobserve(entry.target); // déclenché une seule fois
+                }
+            });
+        }, { threshold: 0.12 });
+
+        document.querySelectorAll(".reveal").forEach(el => observer.observe(el));
+
+        // Burger menu mobile
+        const menuToggle = document.getElementById("menu-toggle");
+        const mobileMenu = document.getElementById("mobile-menu");
+        menuToggle.addEventListener("click", () => {
+            const isOpen = menuToggle.getAttribute("aria-expanded") === "true";
+            menuToggle.setAttribute("aria-expanded", String(!isOpen));
+            mobileMenu.style.maxHeight = isOpen ? "0" : mobileMenu.scrollHeight + "px";
+            // Animation burger → croix
+            const lines = menuToggle.querySelectorAll(".burger-line");
+            lines[0].style.transform = isOpen ? "" : "translateY(5px) rotate(45deg)";
+            lines[1].style.opacity = isOpen ? "" : "0";
+            lines[2].style.transform = isOpen ? "" : "translateY(-5px) rotate(-45deg)";
+        });
+        // Fermeture au clic sur un lien mobile
+        document.querySelectorAll(".mobile-link").forEach(link => {
+            link.addEventListener("click", () => {
+                menuToggle.setAttribute("aria-expanded", "false");
+                mobileMenu.style.maxHeight = "0";
+                const lines = menuToggle.querySelectorAll(".burger-line");
+                lines[0].style.transform = "";
+                lines[1].style.opacity = "";
+                lines[2].style.transform = "";
+            });
+        });
+
+        // Accordéon FAQ — CSS max-height trick (pas de JS height calcul)
+        document.querySelectorAll(".faq-trigger").forEach(trigger => {
+            trigger.addEventListener("click", () => {
+                const item = trigger.closest(".faq-item");
+                const body = item.querySelector(".faq-body");
+                const icon = item.querySelector(".faq-icon");
+                const isOpen = trigger.getAttribute("aria-expanded") === "true";
+
+                // Ferme tous les autres
+                document.querySelectorAll(".faq-item").forEach(other => {
+                    if (other !== item) {
+                        other.querySelector(".faq-trigger").setAttribute("aria-expanded", "false");
+                        other.querySelector(".faq-body").style.maxHeight = other.querySelector(".faq-body").scrollHeight + "px";
+                        other.querySelector(".faq-body").style.maxHeight = "0";
+                        other.querySelector(".faq-icon").style.transform = "rotate(0deg)";
+                        other.querySelector(".faq-icon").style.borderColor = "";
+                        other.querySelector(".faq-icon").style.color = "";
+                    }
+                });
+
+                // Toggle courant
+                if (isOpen) {
+                    trigger.setAttribute("aria-expanded", "false");
+                    body.style.maxHeight = "0";
+                    icon.style.transform = "rotate(0deg)";
+                    icon.style.borderColor = "";
+                    icon.style.color = "";
+                } else {
+                    trigger.setAttribute("aria-expanded", "true");
+                    body.style.maxHeight = body.scrollHeight + "px";
+                    setTimeout(() => {
+                        if (trigger.getAttribute("aria-expanded") === "true") {
+                            body.style.maxHeight = "none";
+                        }
+                    }, 300);
+                    icon.style.transform = "rotate(45deg)";
+                    icon.style.borderColor = "rgba(57,211,83,0.4)";
+                    icon.style.color = "#39d353";
+                }
+            });
+        });
+    </script>
+
+
+    <!-- ===================== MODALES LÉGALES ===================== -->
+
+    <!-- Mentions légales -->
+    <div id="modal-mentions" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="title-mentions">
+      <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+          <p id="title-mentions" class="font-mono text-sm text-neon uppercase tracking-widest">Mentions légales</p>
+          <button onclick="closeModal('modal-mentions')" class="text-slate-500 hover:text-white transition-colors text-xl leading-none">&times;</button>
+        </div>
+        <div class="space-y-5 text-sm text-slate-400 leading-relaxed">
+          <div>
+            <p class="text-white font-medium mb-1">Éditeur du site</p>
+            <p>Sereigne Bara Thiam — Prestataire de services indépendant<br/>
+            Dakar, Sénégal<br/>
+            Email : <a href="mailto:tbara2671@gmail.com" class="text-neon hover:underline">tbara2671@gmail.com</a></p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Activité</p>
+            <p>WP_Architect. est un service de maintenance et de sécurité WordPress proposé sous forme d'abonnement mensuel par Sereigne Bara Thiam, prestataire indépendant.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Hébergement</p>
+            <p>Le site est hébergé par un prestataire tiers. Les coordonnées de l'hébergeur sont disponibles sur demande.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Propriété intellectuelle</p>
+            <p>L'ensemble des contenus présents sur ce site (textes, visuels, logo) sont la propriété exclusive de Sereigne Bara Thiam. Toute reproduction partielle ou totale est interdite sans autorisation préalable.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Responsabilité</p>
+            <p>Les informations fournies sur ce site sont données à titre indicatif. WP_Architect. ne saurait être tenu responsable de tout dommage direct ou indirect lié à l'utilisation du site.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- CGV -->
+    <div id="modal-cgv" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="title-cgv">
+      <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+          <p id="title-cgv" class="font-mono text-sm text-neon uppercase tracking-widest">Conditions Générales de Vente</p>
+          <button onclick="closeModal('modal-cgv')" class="text-slate-500 hover:text-white transition-colors text-xl leading-none">&times;</button>
+        </div>
+        <div class="space-y-5 text-sm text-slate-400 leading-relaxed">
+          <div>
+            <p class="text-white font-medium mb-1">Article 1 — Objet</p>
+            <p>Les présentes CGV régissent les prestations de maintenance WordPress proposées par Sereigne Bara Thiam (WP_Architect.) à tout client ayant souscrit à l'un des plans disponibles sur ce site.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Article 2 — Abonnement et facturation</p>
+            <p>L'abonnement est mensuel, sans engagement minimum. La facturation est effectuée en début de chaque période. Le client peut résilier à tout moment, sans frais ni préavis. L'accès au service reste actif jusqu'à la fin de la période déjà facturée.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Article 3 — Périmètre des prestations</p>
+            <p>Chaque plan inclut les éléments explicitement mentionnés sur la page Tarifs. Les "tickets de modification" couvrent les interventions techniques légères (CSS, configuration d'extension, correction d'affichage). Sont exclus : les refontes complètes, le développement de plugins sur-mesure, la création de contenu et les migrations complètes d'hébergeur.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Article 4 — Accès et sécurité</p>
+            <p>Le client s'engage à fournir des accès valides et sécurisés (wp-admin, SFTP si nécessaire). WP_Architect. s'engage à ne jamais partager ces accès à des tiers et à les utiliser uniquement dans le cadre des prestations souscrites.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Article 5 — Responsabilité</p>
+            <p>WP_Architect. s'engage à apporter tout le soin nécessaire à l'exécution des prestations. La responsabilité du prestataire ne saurait être engagée en cas de défaillance de l'hébergeur, d'attaque externe imprévisible ou de modification tierce du site par le client ou un autre prestataire.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Article 6 — Droit applicable</p>
+            <p>Les présentes CGV sont soumises au droit sénégalais. En cas de litige, les parties s'engagent à rechercher une solution amiable avant tout recours.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Politique de confidentialité -->
+    <div id="modal-privacy" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="title-privacy">
+      <div class="modal-box">
+        <div class="flex items-center justify-between mb-6">
+          <p id="title-privacy" class="font-mono text-sm text-neon uppercase tracking-widest">Politique de confidentialité</p>
+          <button onclick="closeModal('modal-privacy')" class="text-slate-500 hover:text-white transition-colors text-xl leading-none">&times;</button>
+        </div>
+        <div class="space-y-5 text-sm text-slate-400 leading-relaxed">
+          <div>
+            <p class="text-white font-medium mb-1">Données collectées</p>
+            <p>WP_Architect. ne collecte aucune donnée personnelle via ce site de manière automatisée. Les seules informations traitées sont celles que vous transmettez volontairement par email (nom, adresse email, URL de votre site) dans le cadre d'une demande d'abonnement.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Finalité</p>
+            <p>Les données collectées sont utilisées exclusivement pour la gestion de la relation client et l'exécution des prestations souscrites. Elles ne sont jamais revendues ni partagées avec des tiers.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Conservation</p>
+            <p>Les données sont conservées pendant la durée de la relation commerciale et supprimées sur simple demande du client après résiliation.</p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Droits</p>
+            <p>Conformément à la réglementation applicable, vous disposez d'un droit d'accès, de rectification et de suppression de vos données. Pour exercer ces droits : <a href="mailto:tbara2671@gmail.com" class="text-neon hover:underline">tbara2671@gmail.com</a></p>
+          </div>
+          <div>
+            <p class="text-white font-medium mb-1">Cookies</p>
+            <p>Ce site n'utilise aucun cookie de tracking ou publicitaire. Aucune donnée de navigation n'est collectée.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</body>
+
+</html>
