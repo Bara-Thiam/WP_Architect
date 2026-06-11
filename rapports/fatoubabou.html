@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport Flash · Cabinet Fatou Babou · WP_Architect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:           #f9f9f7;
+    --surface:      #ffffff;
+    --surface-2:    #f2f2ef;
+    --border:       #e4e4e0;
+    --border-hi:    #cbcbc6;
+    --text:         #111110;
+    --muted:        #5a5a56;
+    --subtle:       #96968f;
+    --green:        #22c55e;
+    --green-dark:   #16a34a;
+    --green-soft:   #f0fdf4;
+    --green-border: #bbf7d0;
+    --red:          #dc2626;
+    --red-soft:     #fef2f2;
+    --red-border:   #fecaca;
+    --orange:       #ea580c;
+    --orange-soft:  #fff7ed;
+    --orange-border:#fed7aa;
+    --yellow:       #d97706;
+    --yellow-soft:  #fffbeb;
+    --yellow-border:#fde68a;
+    --mono: 'JetBrains Mono', monospace;
+    --sans: 'Inter', system-ui, sans-serif;
+  }
+  html { background: var(--bg); color: var(--text); font-family: var(--sans); font-size: 14px; line-height: 1.65; -webkit-font-smoothing: antialiased; }
+  body { max-width: 820px; margin: 0 auto; padding: 52px 36px 80px; }
+
+  /* HEADER */
+  .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 28px; border-bottom: 2px solid var(--text); margin-bottom: 48px; }
+  .logo-wrap { display: flex; align-items: center; gap: 14px; }
+  .logo-img { height: 100px; width: auto; display: block; }
+  .logo-text { display: flex; flex-direction: column; }
+  .logo-tag { font-size: 10px; color: var(--muted); letter-spacing: 0.04em; margin-top: 2px; }
+  .header-right { text-align: right; }
+  .doc-type { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--muted); }
+  .doc-date { font-size: 14px; font-weight: 600; color: var(--text); margin-top: 3px; }
+
+  /* HERO */
+  .hero { margin-bottom: 44px; }
+  .hero-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--subtle); margin-bottom: 10px; }
+  .hero-client { font-size: 38px; font-weight: 700; letter-spacing: -0.025em; color: var(--text); line-height: 1.1; margin-bottom: 5px; }
+  .hero-url { font-family: var(--mono); font-size: 12px; color: var(--muted); margin-bottom: 20px; }
+  .hero-intro { font-size: 13px; color: var(--muted); max-width: 560px; line-height: 1.75; padding-left: 16px; border-left: 3px solid var(--green); }
+
+  /* VERDICT */
+  .verdict { background: var(--text); border-radius: 10px; padding: 26px 30px; margin-bottom: 48px; display: flex; align-items: center; gap: 24px; }
+  .verdict-divider { width: 1px; height: 52px; background: rgba(255,255,255,.15); flex-shrink: 0; }
+  .verdict-badge { flex-shrink: 0; background: rgba(234,88,12,.15); border: 1px solid rgba(234,88,12,.3); border-radius: 8px; padding: 10px 14px; text-align: center; }
+  .verdict-badge-label { font-size: 9px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #fb923c; margin-bottom: 4px; }
+  .verdict-badge-val { font-size: 22px; font-weight: 700; color: #fb923c; font-family: var(--mono); line-height: 1; }
+  .verdict-title { font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 5px; }
+  .verdict-desc { font-size: 13px; color: rgba(255,255,255,.6); line-height: 1.6; max-width: 460px; }
+
+  /* SECTION */
+  .section { margin-bottom: 44px; }
+  .section-label { font-size: 10px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: var(--subtle); margin-bottom: 4px; }
+  .section-title { font-size: 19px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; margin-bottom: 18px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+
+  /* CARDS */
+  .cards { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .cards.three { grid-template-columns: 1fr 1fr 1fr; }
+  @media(max-width:600px){ .cards,.cards.three{ grid-template-columns:1fr; } }
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 18px 20px; }
+  .card-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--subtle); margin-bottom: 7px; }
+  .card-value { font-size: 18px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.01em; }
+  .card-detail { font-size: 12px; color: var(--muted); line-height: 1.6; }
+  code { font-family: var(--mono); font-size: 11px; background: var(--surface-2); border: 1px solid var(--border); padding: 1px 5px; border-radius: 3px; color: var(--muted); }
+
+  .c-red    { color: var(--red); }
+  .c-orange { color: var(--orange); }
+  .c-yellow { color: var(--yellow); }
+  .c-green  { color: var(--green-dark); }
+
+  /* BADGES */
+  .badge { display: inline-flex; align-items: center; gap: 5px; padding: 3px 9px; border-radius: 20px; font-size: 10px; font-weight: 600; letter-spacing: .05em; text-transform: uppercase; }
+  .badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .badge-red    { background: var(--red-soft);    color: var(--red);    border: 1px solid var(--red-border); }
+  .badge-orange { background: var(--orange-soft); color: var(--orange); border: 1px solid var(--orange-border); }
+  .badge-yellow { background: var(--yellow-soft); color: var(--yellow); border: 1px solid var(--yellow-border); }
+  .badge-green  { background: var(--green-soft);  color: var(--green-dark); border: 1px solid var(--green-border); }
+
+  /* VULN TABLE */
+  .vuln-table { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; overflow: hidden; margin-top: 12px; }
+  .vuln-row { display: grid; grid-template-columns: 1.8fr 1fr 2.2fr; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--border); gap: 14px; }
+  .vuln-row:last-child { border-bottom: none; }
+  .vuln-row.thead { background: var(--surface-2); }
+  .vuln-row.thead span { font-size: 10px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--subtle); }
+  .vuln-name { font-family: var(--mono); font-size: 12px; font-weight: 500; color: var(--text); }
+  .vuln-impact { font-size: 12px; color: var(--muted); line-height: 1.5; }
+  @media(max-width:600px){ .vuln-row{ grid-template-columns:1fr; } .vuln-row.thead{ display:none; } }
+
+  /* ALERT BOXES */
+  .alert-box { border-radius: 8px; padding: 18px 22px; margin-top: 10px; }
+  .alert-box.danger { background: var(--red-soft);    border: 1px solid var(--red-border);    border-left: 4px solid var(--red); }
+  .alert-box.warn   { background: var(--orange-soft); border: 1px solid var(--orange-border); border-left: 4px solid var(--orange); }
+  .alert-box.good   { background: var(--green-soft);  border: 1px solid var(--green-border);  border-left: 4px solid var(--green); }
+  .alert-title { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; margin-bottom: 11px; }
+  .alert-box.danger .alert-title { color: var(--red); }
+  .alert-box.warn   .alert-title { color: var(--orange); }
+  .alert-box.good   .alert-title { color: var(--green-dark); }
+  .ai { flex-shrink: 0; margin-top: 3px; }
+  .alert-item { display: flex; align-items: flex-start; gap: 9px; margin-bottom: 8px; font-size: 13px; color: var(--muted); line-height: 1.6; }
+  .alert-item:last-child { margin-bottom: 0; }
+
+  /* AUDITEUR */
+  .auditor-section { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 26px 30px; margin-top: 48px; display: flex; gap: 22px; align-items: flex-start; }
+  .auditor-avatar { width: 48px; height: 48px; border-radius: 50%; background: var(--text); display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-family: var(--mono); font-size: 14px; font-weight: 700; color: #fff; }
+  .auditor-name  { font-size: 15px; font-weight: 700; color: var(--text); margin-bottom: 2px; }
+  .auditor-role  { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .auditor-tools { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 12px; }
+  .tool-tag { font-family: var(--mono); font-size: 10px; background: var(--surface-2); border: 1px solid var(--border); padding: 2px 7px; border-radius: 4px; color: var(--muted); }
+  .auditor-note { font-size: 12px; color: var(--subtle); line-height: 1.65; font-style: italic; }
+
+  /* CTA */
+  .cta-block { background: var(--text); border-radius: 10px; padding: 38px 34px; margin-top: 18px; text-align: center; }
+  .cta-eyebrow { font-size: 10px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 10px; }
+  .cta-title { font-size: 22px; font-weight: 700; color: #fff; letter-spacing: -.015em; margin-bottom: 8px; }
+  .cta-sub { font-size: 13px; color: rgba(255,255,255,.55); margin-bottom: 26px; max-width: 400px; margin-left: auto; margin-right: auto; line-height: 1.65; }
+  .cta-btn { display: inline-block; background: var(--green); color: #fff; font-size: 13px; font-weight: 700; padding: 12px 28px; border-radius: 7px; text-decoration: none; letter-spacing: .01em; }
+  .cta-note { font-size: 11px; color: rgba(255,255,255,.3); margin-top: 14px; font-family: var(--mono); }
+
+  /* FOOTER */
+  .footer { margin-top: 48px; padding-top: 22px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; gap: 16px; }
+  .footer-brand { font-size: 11px; color: var(--subtle); line-height: 1.8; }
+  .footer-brand strong { color: var(--green); font-weight: 600; font-family: var(--mono); }
+  .footer-conf { font-size: 10px; color: var(--border-hi); text-align: right; max-width: 260px; line-height: 1.6; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-wrap">
+    <img class="logo-img" src="../logo2.png" alt="WP_Architect logo">
+    <div class="logo-text">
+      <div class="logo-tag">Audit · Sécurisation · Optimisation WordPress — Dakar</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="doc-type">Rapport Flash</div>
+    <div class="doc-date">Juin 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Diagnostic Stabilité &amp; Performance — Confidentiel</div>
+  <div class="hero-client">Cabinet Fatou Babou</div>
+  <div class="hero-url">fbavocat-sn.com</div>
+  <p class="hero-intro">Ce rapport présente les résultats d'une analyse passive et non intrusive réalisée sur votre plateforme web. Il est transmis à titre informatif et gracieux, sans engagement de votre part.</p>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="verdict-badge">
+    <div class="verdict-badge-label">Vigilance</div>
+    <div class="verdict-badge-val">◎ 2</div>
+  </div>
+  <div class="verdict-divider"></div>
+  <div>
+    <div class="verdict-title">Infrastructure solide — 2 points d'ajustement identifiés</div>
+    <div class="verdict-desc">Votre hébergement WordPress.com Cloud et votre accès administration sécurisé témoignent d'un vrai soin apporté à la plateforme. Deux points méritent néanmoins attention : une extension en version de développement active en production, et une lenteur d'affichage sur mobile à Dakar.</div>
+  </div>
+</div>
+
+<!-- SECTION 1 : CE QUI FONCTIONNE BIEN -->
+<div class="section">
+  <div class="section-label">Point 01</div>
+  <div class="section-title">Une infrastructure de premier niveau — des choix techniques à saluer</div>
+  <div class="cards three">
+    <div class="card">
+      <div class="card-label">Accès administration</div>
+      <div class="card-value c-green">Sécurisé</div>
+      <div class="card-detail">Code HTTP 403 sur <code>/wp-admin</code> et <code>wp-login.php</code>. L'accès direct est bloqué — un point que beaucoup de cabinets négligent.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Hébergement</div>
+      <div class="card-value c-green">Premium</div>
+      <div class="card-detail">Infrastructure WordPress.com Cloud (Automattic) avec CDN global actif. Temps de réponse initial (TTFB) maîtrisé grâce au Batcache.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">SEO & Référencement</div>
+      <div class="card-value c-green">À jour</div>
+      <div class="card-detail">Yoast SEO v27.8 installé et maintenu à jour. Base solide pour la visibilité en ligne du cabinet.</div>
+    </div>
+  </div>
+  <div class="alert-box good">
+    <div class="alert-title">Ce que cela signifie concrètement</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#22c55e"/><path d="M4 7.5l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Votre plateforme résiste bien aux attaques automatisées de premier niveau, contrairement à la majorité des sites WordPress d'avocats à Dakar.
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#22c55e"/><path d="M4 7.5l2 2 4-4" stroke="white" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      L'hébergement Cloud d'Automattic garantit une disponibilité élevée et une infrastructure maintenue en continu — un choix qui se justifie pour un cabinet à double inscription (Paris / Dakar).
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 : ELEMENTOR DEV -->
+<div class="section">
+  <div class="section-label">Point 02</div>
+  <div class="section-title">Une extension en version de développement active sur votre site officiel</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Elementor (constructeur de pages)</div>
+      <div class="card-value c-orange">Version bêta</div>
+      <div class="card-detail">Version détectée : <code>4.1.0-dev3</code><br>Il s'agit d'une version de développement, non validée pour la production. Les versions stables actuelles sont dans la branche <strong>4.x</strong> officielle.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Risque applicatif</div>
+      <div class="card-value c-orange">Instabilité potentielle</div>
+      <div class="card-detail">Les versions <code>-dev</code> contiennent des fonctionnalités non finalisées et des bugs non corrigés. Elles ne sont pas recommandées sur un site en production.</div>
+    </div>
+  </div>
+  <div class="alert-box warn">
+    <div class="alert-title">Pourquoi c'est un angle mort sur une infrastructure par ailleurs solide</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Une mise à jour automatique d'Elementor vers une version stable peut casser l'affichage de pages entières si la version <code>dev3</code> a introduit des dépendances non standards dans votre thème.
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Les versions de développement ne sont pas couvertes par les bulletins de sécurité officiels d'Elementor — une vulnérabilité dans cette version pourrait rester non signalée et non corrigée.
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Pour un cabinet dont la crédibilité repose sur la rigueur et la précision, une indisponibilité du site — même courte — au mauvais moment peut affecter la perception d'un prospect ou d'un client.
+    </div>
+  </div>
+
+  <div class="vuln-table" style="margin-top:14px;">
+    <div class="vuln-row thead"><span>Configuration réseau</span><span>Niveau</span><span>Observation</span></div>
+    <div class="vuln-row">
+      <div class="vuln-name">X-Frame-Options</div>
+      <div><span class="badge badge-yellow">Mineur</span></div>
+      <div class="vuln-impact">Absent au niveau du domaine. Risque faible de Clickjacking — une page du cabinet pourrait être encadrée dans un site tiers malveillant.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Alt-Svc (protocoles alternatifs)</div>
+      <div><span class="badge badge-yellow">À surveiller</span></div>
+      <div class="vuln-impact">Le serveur annonce des protocoles alternatifs de connexion. Point de vigilance à vérifier pour éviter les détournements de flux entrants.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 : PERFORMANCE -->
+<div class="section">
+  <div class="section-label">Point 03</div>
+  <div class="section-title">Une lenteur mobile qui freine l'expérience de vos visiteurs à Dakar</div>
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Score mobile — Google PageSpeed</div>
+      <div class="card-value c-red">30–38 / 100</div>
+      <div class="card-detail">Les scripts d'Elementor ralentissent l'affichage initial sur smartphone. Sur un réseau mobile dakarois (3G/4G), un prospect qui cherche un avocat n'attend pas — il repart.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Score desktop — Google PageSpeed</div>
+      <div class="card-value c-yellow">62–68 / 100</div>
+      <div class="card-detail">Score moyen sur ordinateur. Le CDN WordPress.com compense le TTFB, mais le poids cumulé du thème et des extensions ralentit le rendu visuel complet.</div>
+    </div>
+  </div>
+  <div class="alert-box warn" style="margin-top:10px;">
+    <div class="alert-title">L'impact concret sur votre cabinet</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Google pénalise les sites lents sur mobile dans ses résultats de recherche — ce qui réduit directement votre visibilité auprès des personnes qui cherchent un avocat à Dakar depuis leur téléphone.
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      L'optimisation du chargement mobile sur votre infrastructure WordPress.com est réalisable sans changer d'hébergeur — c'est un ajustement de configuration, pas une refonte.
+    </div>
+  </div>
+</div>
+
+<!-- AUDITEUR -->
+<div class="auditor-section">
+  <div class="auditor-avatar">SB</div>
+  <div>
+    <div class="auditor-name">Sereigne Bara Thiam</div>
+    <div class="auditor-role">Auditeur WordPress · Fondateur WP_Architect · Dakar, Sénégal</div>
+    <div class="auditor-tools">
+      <span class="tool-tag">WhatWeb</span>
+      <span class="tool-tag">WPScan</span>
+      <span class="tool-tag">Nikto</span>
+      <span class="tool-tag">Nmap</span>
+      <span class="tool-tag">Lighthouse CLI</span>
+      <span class="tool-tag">Kali Linux</span>
+    </div>
+    <div class="auditor-note">Analyse réalisée en mode passif et non intrusif. Aucune donnée du site n'a été accédée, modifiée ou extraite. Ce rapport est fourni gracieusement, à titre informatif uniquement.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">Prochaine étape</div>
+  <div class="cta-title">Une question sur ce rapport ?</div>
+  <div class="cta-sub">Répondez simplement à cet email. J'explique comment stabiliser votre version d'Elementor et optimiser l'affichage mobile — sans changer votre hébergement.</div>
+  <a class="cta-btn" href="mailto:bara.wp.architect@gmail.com?subject=Rapport%20Flash%20Cabinet%20Fatou%20Babou%20%E2%80%94%20Question">Répondre par email</a>
+  <div class="cta-note">bara.wp.architect@gmail.com · Réponse sous 24h · Sans engagement</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">
+    <strong>WP_Architect.</strong><br>
+    Sereigne Bara Thiam · Dakar, Sénégal<br>
+    <strong>Site officiel</strong> : <a href="https://wp-architect.vercel.app" target="_blank">wp-architect.vercel.app</a>
+  </div>
+  <div class="footer-conf">Document confidentiel · Analyse passive non intrusive · Transmis à titre gracieux et informatif uniquement.</div>
+</footer>
+
+</body>
+</html>
