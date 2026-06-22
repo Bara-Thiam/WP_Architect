@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport Flash · 2S Immobilier · WP_Architect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#f9f9f7; --surface:#ffffff; --surface-2:#f2f2ef;
+    --border:#e4e4e0; --border-hi:#cbcbc6;
+    --text:#111110; --muted:#5a5a56; --subtle:#96968f;
+    --green:#22c55e; --green-dark:#16a34a; --green-soft:#f0fdf4; --green-border:#bbf7d0;
+    --red:#dc2626; --red-soft:#fef2f2; --red-border:#fecaca;
+    --orange:#ea580c; --orange-soft:#fff7ed; --orange-border:#fed7aa;
+    --yellow:#d97706; --yellow-soft:#fffbeb; --yellow-border:#fde68a;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+  }
+  html { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  body { max-width:820px; margin:0 auto; padding:52px 36px 80px; }
+
+  .header { display:flex; justify-content:space-between; align-items:center; padding-bottom:28px; border-bottom:2px solid var(--text); margin-bottom:48px; }
+  .logo-wrap { display:flex; align-items:center; gap:14px; }
+  .logo-img { height:100px; width:auto; display:block; }
+  .logo-tag { font-size:10px; color:var(--muted); letter-spacing:0.04em; margin-top:2px; }
+  .header-right { text-align:right; }
+  .doc-type { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .doc-date { font-size:14px; font-weight:600; color:var(--text); margin-top:3px; }
+
+  .hero { margin-bottom:44px; }
+  .hero-eyebrow { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:10px; }
+  .hero-client { font-size:38px; font-weight:700; letter-spacing:-0.025em; color:var(--text); line-height:1.1; margin-bottom:5px; }
+  .hero-url { font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:20px; }
+  .hero-intro { font-size:13px; color:var(--muted); max-width:560px; line-height:1.75; padding-left:16px; border-left:3px solid var(--green); }
+
+  .verdict { background:var(--text); border-radius:10px; padding:26px 30px; margin-bottom:48px; display:flex; align-items:center; gap:24px; }
+  .verdict-divider { width:1px; height:52px; background:rgba(255,255,255,.15); flex-shrink:0; }
+  .verdict-badge { flex-shrink:0; background:rgba(220,38,38,.15); border:1px solid rgba(220,38,38,.35); border-radius:8px; padding:10px 14px; text-align:center; }
+  .verdict-badge-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#f87171; margin-bottom:4px; }
+  .verdict-badge-val { font-size:22px; font-weight:700; color:#f87171; font-family:var(--mono); line-height:1; }
+  .verdict-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:5px; }
+  .verdict-desc { font-size:13px; color:rgba(255,255,255,.6); line-height:1.6; max-width:460px; }
+
+  .section { margin-bottom:44px; }
+  .section-label { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .section-title { font-size:19px; font-weight:700; color:var(--text); letter-spacing:-0.01em; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .cards.three { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:600px){ .cards,.cards.three{ grid-template-columns:1fr; } }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card-label { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--subtle); margin-bottom:7px; }
+  .card-value { font-size:18px; font-weight:700; margin-bottom:6px; letter-spacing:-0.01em; }
+  .card-detail { font-size:12px; color:var(--muted); line-height:1.6; }
+  code { font-family:var(--mono); font-size:11px; background:var(--surface-2); border:1px solid var(--border); padding:1px 5px; border-radius:3px; color:var(--muted); }
+  .cve-tag { font-family:var(--mono); font-size:10px; background:var(--red-soft); border:1px solid var(--red-border); padding:2px 6px; border-radius:4px; color:var(--red); font-weight:600; }
+
+  .c-red { color:var(--red); } .c-orange { color:var(--orange); }
+  .c-yellow { color:var(--yellow); } .c-green { color:var(--green-dark); }
+
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+  .badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .badge-red    { background:var(--red-soft);    color:var(--red);       border:1px solid var(--red-border); }
+  .badge-orange { background:var(--orange-soft); color:var(--orange);    border:1px solid var(--orange-border); }
+  .badge-yellow { background:var(--yellow-soft); color:var(--yellow);    border:1px solid var(--yellow-border); }
+  .badge-green  { background:var(--green-soft);  color:var(--green-dark);border:1px solid var(--green-border); }
+
+  /* Chaîne d'attaque */
+  .chain { display:flex; align-items:center; gap:0; margin-top:14px; flex-wrap:wrap; }
+  .chain-step { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 16px; flex:1; min-width:140px; }
+  .chain-step-num { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .chain-step-title { font-size:12px; font-weight:700; color:var(--text); margin-bottom:3px; }
+  .chain-step-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+  .chain-step.danger { border-color:var(--red-border); background:var(--red-soft); }
+  .chain-step.danger .chain-step-title { color:var(--red); }
+  .chain-arrow { font-size:18px; color:var(--border-hi); padding:0 8px; flex-shrink:0; }
+
+  /* Score bars */
+  .score-bar-wrap { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin-bottom:12px; }
+  .score-bar-row { display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+  .score-bar-row:last-child { margin-bottom:0; }
+  .score-bar-label { font-size:11px; font-weight:600; color:var(--muted); width:80px; flex-shrink:0; }
+  .score-bar-track { flex:1; height:8px; background:var(--surface-2); border-radius:20px; overflow:hidden; border:1px solid var(--border); }
+  .score-bar-fill { height:100%; border-radius:20px; }
+  .fill-green { background:var(--green); } .fill-orange { background:var(--orange); } .fill-red { background:var(--red); }
+  .score-bar-val { font-size:13px; font-weight:700; width:36px; text-align:right; flex-shrink:0; }
+
+  .metric-row { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; }
+  .metric { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:12px 16px; }
+  .metric-label { font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .metric-val { font-size:16px; font-weight:700; }
+  .metric-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  .vuln-table { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-top:12px; }
+  .vuln-row { display:grid; grid-template-columns:1.8fr 1fr 2.2fr; align-items:center; padding:12px 18px; border-bottom:1px solid var(--border); gap:14px; }
+  .vuln-row:last-child { border-bottom:none; }
+  .vuln-row.thead { background:var(--surface-2); }
+  .vuln-row.thead span { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--subtle); }
+  .vuln-name { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--text); }
+  .vuln-impact { font-size:12px; color:var(--muted); line-height:1.5; }
+  @media(max-width:600px){ .vuln-row{ grid-template-columns:1fr; } .vuln-row.thead{ display:none; } }
+
+  .alert-box { border-radius:8px; padding:18px 22px; margin-top:10px; }
+  .alert-box.danger { background:var(--red-soft);    border:1px solid var(--red-border);    border-left:4px solid var(--red); }
+  .alert-box.warn   { background:var(--orange-soft); border:1px solid var(--orange-border); border-left:4px solid var(--orange); }
+  .alert-box.good   { background:var(--green-soft);  border:1px solid var(--green-border);  border-left:4px solid var(--green); }
+  .alert-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:11px; }
+  .alert-box.danger .alert-title { color:var(--red); }
+  .alert-box.warn   .alert-title { color:var(--orange); }
+  .alert-box.good   .alert-title { color:var(--green-dark); }
+  .ai { flex-shrink:0; margin-top:3px; }
+  .alert-item { display:flex; align-items:flex-start; gap:9px; margin-bottom:8px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .alert-item:last-child { margin-bottom:0; }
+
+  .auditor-section { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:26px 30px; margin-top:48px; display:flex; gap:22px; align-items:flex-start; }
+  .auditor-avatar { width:48px; height:48px; border-radius:50%; background:var(--text); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--mono); font-size:14px; font-weight:700; color:#fff; }
+  .auditor-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .auditor-role { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .auditor-tools { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+  .tool-tag { font-family:var(--mono); font-size:10px; background:var(--surface-2); border:1px solid var(--border); padding:2px 7px; border-radius:4px; color:var(--muted); }
+  .auditor-note { font-size:12px; color:var(--subtle); line-height:1.65; font-style:italic; }
+
+  .cta-block { background:var(--text); border-radius:10px; padding:38px 34px; margin-top:18px; text-align:center; }
+  .cta-eyebrow { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px; }
+  .cta-title { font-size:22px; font-weight:700; color:#fff; letter-spacing:-.015em; margin-bottom:8px; }
+  .cta-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:26px; max-width:400px; margin-left:auto; margin-right:auto; line-height:1.65; }
+  .cta-btn { display:inline-block; background:var(--green); color:#fff; font-size:13px; font-weight:700; padding:12px 28px; border-radius:7px; text-decoration:none; letter-spacing:.01em; }
+  .cta-note { font-size:11px; color:rgba(255,255,255,.3); margin-top:14px; font-family:var(--mono); }
+
+  .footer { margin-top:48px; padding-top:22px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-end; gap:16px; }
+  .footer-brand { font-size:11px; color:var(--subtle); line-height:1.8; }
+  .footer-brand strong { color:var(--green); font-weight:600; font-family:var(--mono); }
+  .footer-conf { font-size:10px; color:var(--border-hi); text-align:right; max-width:260px; line-height:1.6; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-wrap">
+    <img class="logo-img" src="../logo2.png" alt="WP_Architect logo">
+    <div class="logo-text">
+      <div class="logo-tag">Audit · Sécurisation · Optimisation WordPress — Dakar</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="doc-type">Rapport Flash</div>
+    <div class="doc-date">Juin 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Diagnostic Sécurité &amp; Performance — Confidentiel</div>
+  <div class="hero-client">2S Immobilier</div>
+  <div class="hero-url">2simmobilier.com</div>
+  <p class="hero-intro">Ce rapport présente les résultats d'une analyse passive et non intrusive réalisée sur votre plateforme web. Il est transmis à titre informatif et gracieux, sans engagement de votre part.</p>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="verdict-badge">
+    <div class="verdict-badge-label">Critique</div>
+    <div class="verdict-badge-val">⚠ 4</div>
+  </div>
+  <div class="verdict-divider"></div>
+  <div>
+    <div class="verdict-title">Chaîne d'attaque active — intervention urgente recommandée</div>
+    <div class="verdict-desc">Deux vulnérabilités documentées sur votre plugin Slider Revolution, combinées à une interface d'administration publiquement accessible, forment une chaîne d'attaque complète permettant théoriquement la prise de contrôle du serveur et l'exfiltration des dossiers de vos clients.</div>
+  </div>
+</div>
+
+<!-- SECTION 1 : CHAÎNE D'ATTAQUE -->
+<div class="section">
+  <div class="section-label">Point 01 — Le risque majeur</div>
+  <div class="section-title">Une combinaison de failles qui ouvre la porte en entier</div>
+
+  <div class="chain">
+    <div class="chain-step">
+      <div class="chain-step-num">Étape 1</div>
+      <div class="chain-step-title">Admin exposé</div>
+      <div class="chain-step-desc"><code>/wp-admin</code> et <code>wp-login.php</code> accessibles publiquement (code 200). Un attaquant localise et cible un compte utilisateur.</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-step-num">Étape 2</div>
+      <div class="chain-step-title">Faille plugin</div>
+      <div class="chain-step-desc">Slider Revolution 6.6.15 permet l'upload de fichiers arbitraires une fois authentifié, même avec un simple compte "Auteur".</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step danger">
+      <div class="chain-step-num">Résultat</div>
+      <div class="chain-step-title">Contrôle total</div>
+      <div class="chain-step-desc">Exécution de code à distance (RCE). Accès aux dossiers clients, modification du site, exfiltration des données.</div>
+    </div>
+  </div>
+
+  <div class="alert-box danger" style="margin-top:14px;">
+    <div class="alert-title">Deux CVE documentées sur Slider Revolution 6.6.15</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <span><strong>Arbitrary File Upload (≤ 6.6.15)</strong> — Un utilisateur authentifié peut téléverser un fichier malveillant et déclencher une exécution de code à distance sur votre serveur. Version actuelle : <strong>6.7.35</strong>. Votre installation : <strong>6.6.15</strong>.</span>
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <span><strong>PHP Object Injection (≤ 6.6.19)</strong> — L'import de configurations corrompues permet de lire, modifier ou effacer des fichiers sur le serveur, et d'exfiltrer des données sensibles.</span>
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Pour une agence qui collecte des pièces d'identité, avis d'imposition et relevés bancaires via ses formulaires, une compromission de ce niveau peut engager directement la responsabilité civile et pénale de la structure.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 : STACK + HEADERS -->
+<div class="section">
+  <div class="section-label">Point 02</div>
+  <div class="section-title">Une stack correcte mais une protection réseau inexistante</div>
+
+  <div class="cards three" style="margin-bottom:12px;">
+    <div class="card">
+      <div class="card-label">WordPress Core</div>
+      <div class="card-value c-yellow">6.8.5</div>
+      <div class="card-detail">Version security release (mars 2026) — stable, mais appartenant à une branche passée. Une migration vers la branche 6.9.x garantit une couverture maximale.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">PHP</div>
+      <div class="card-value c-green">8.3</div>
+      <div class="card-detail">Version activement supportée. C'est le bon environnement pour faire tourner WordPress de manière performante et sécurisée.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Slider Revolution</div>
+      <div class="card-value c-red">6.6.15 <span class="cve-tag">2× CVE</span></div>
+      <div class="card-detail">19 versions de retard sur la branche actuelle (6.7.35). Deux vulnérabilités actives et documentées sur cette version.</div>
+    </div>
+  </div>
+
+  <div class="vuln-table">
+    <div class="vuln-row thead"><span>Protection manquante</span><span>Niveau</span><span>Conséquence</span></div>
+    <div class="vuln-row">
+      <div class="vuln-name">X-Frame-Options</div>
+      <div><span class="badge badge-orange">Moyen</span></div>
+      <div class="vuln-impact">Votre site peut être encadré dans une fausse page pour intercepter les clics ou formulaires de vos prospects.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Strict-Transport-Security</div>
+      <div><span class="badge badge-orange">Moyen</span></div>
+      <div class="vuln-impact">La connexion HTTPS n'est pas imposée de force — les échanges de données (dossiers clients) peuvent être dégradés vers HTTP non chiffré.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">X-Content-Type-Options</div>
+      <div><span class="badge badge-yellow">Mineur</span></div>
+      <div class="vuln-impact">Le navigateur peut interpréter des fichiers malveillants comme du code légitime.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 : PERFORMANCE -->
+<div class="section">
+  <div class="section-label">Point 03</div>
+  <div class="section-title">Des performances mobiles insuffisantes — des prospects qui partent</div>
+
+  <div class="score-bar-wrap">
+    <div class="score-bar-row">
+      <div class="score-bar-label">Mobile</div>
+      <div class="score-bar-track"><div class="score-bar-fill fill-orange" style="width:52%"></div></div>
+      <div class="score-bar-val c-orange">52</div>
+    </div>
+    <div class="score-bar-row">
+      <div class="score-bar-label">Desktop</div>
+      <div class="score-bar-track"><div class="score-bar-fill fill-green" style="width:71%"></div></div>
+      <div class="score-bar-val c-green">71</div>
+    </div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric">
+      <div class="metric-label">Apparition du premier contenu (mobile)</div>
+      <div class="metric-val c-red">3,9 s</div>
+      <div class="metric-sub">Seuil recommandé : moins de 1,8 s</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Affichage du bloc principal (mobile)</div>
+      <div class="metric-val c-red">5,2 s</div>
+      <div class="metric-sub">Seuil recommandé : moins de 2,5 s</div>
+    </div>
+  </div>
+
+  <div class="alert-box warn" style="margin-top:12px;">
+    <div class="alert-title">Impact direct sur vos clients immobiliers</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Un acheteur ou locataire potentiel qui cherche un bien sur smartphone abandonne généralement une page après 3 secondes d'attente. À 5,2 secondes, votre taux d'abandon mobile est structurellement élevé.
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Google intègre ces métriques dans son algorithme de référencement local — un score mobile à 52 pénalise votre positionnement sur les recherches immobilières à Dakar.
+    </div>
+  </div>
+</div>
+
+<!-- AUDITEUR -->
+<div class="auditor-section">
+  <div class="auditor-avatar">SB</div>
+  <div>
+    <div class="auditor-name">Sereigne Bara Thiam</div>
+    <div class="auditor-role">Auditeur WordPress · Fondateur WP_Architect · Dakar, Sénégal</div>
+    <div class="auditor-tools">
+      <span class="tool-tag">WhatWeb</span>
+      <span class="tool-tag">WPScan</span>
+      <span class="tool-tag">Nikto</span>
+      <span class="tool-tag">Nmap</span>
+      <span class="tool-tag">Lighthouse CLI</span>
+      <span class="tool-tag">Kali Linux</span>
+    </div>
+    <div class="auditor-note">Analyse réalisée en mode passif et non intrusif. Aucune donnée du site n'a été accédée, modifiée ou extraite. Ce rapport est fourni gracieusement, à titre informatif uniquement.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">Prochaine étape</div>
+  <div class="cta-title">Une question sur ce rapport ?</div>
+  <div class="cta-sub">Répondez simplement à cet email. J'explique le plan de remédiation — patch Slider Revolution, sécurisation de l'accès admin, injection des headers HTTP et optimisation mobile.</div>
+  <a class="cta-btn" href="mailto:bara.wp.architect@gmail.com?subject=Rapport%20Flash%202S%20Immobilier%20%E2%80%94%20Question">Répondre par email</a>
+  <div class="cta-note">bara.wp.architect@gmail.com · Réponse sous 24h · Sans engagement</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">
+    <strong>WP_Architect.</strong><br>
+    Sereigne Bara Thiam · Dakar, Sénégal<br>
+    <strong>Site officiel</strong> : <a href="https://wp-architect.vercel.app" target="_blank">wp-architect.vercel.app</a>
+  </div>
+  <div class="footer-conf">Document confidentiel · Analyse passive non intrusive · Transmis à titre gracieux et informatif uniquement.</div>
+</footer>
+
+</body>
+</html>
