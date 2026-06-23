@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport Flash · GoWash · WP_Architect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#f9f9f7; --surface:#ffffff; --surface-2:#f2f2ef;
+    --border:#e4e4e0; --border-hi:#cbcbc6;
+    --text:#111110; --muted:#5a5a56; --subtle:#96968f;
+    --green:#22c55e; --green-dark:#16a34a; --green-soft:#f0fdf4; --green-border:#bbf7d0;
+    --red:#dc2626; --red-soft:#fef2f2; --red-border:#fecaca;
+    --orange:#ea580c; --orange-soft:#fff7ed; --orange-border:#fed7aa;
+    --yellow:#d97706; --yellow-soft:#fffbeb; --yellow-border:#fde68a;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+  }
+  html { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  body { max-width:820px; margin:0 auto; padding:52px 36px 80px; }
+
+  .header { display:flex; justify-content:space-between; align-items:center; padding-bottom:28px; border-bottom:2px solid var(--text); margin-bottom:48px; }
+  .logo-wrap { display:flex; align-items:center; gap:14px; }
+  .logo-img { height:100px; width:auto; display:block; }
+  .logo-tag { font-size:10px; color:var(--muted); letter-spacing:0.04em; margin-top:2px; }
+  .header-right { text-align:right; }
+  .doc-type { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .doc-date { font-size:14px; font-weight:600; color:var(--text); margin-top:3px; }
+
+  .hero { margin-bottom:44px; }
+  .hero-eyebrow { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:10px; }
+  .hero-client { font-size:38px; font-weight:700; letter-spacing:-0.025em; color:var(--text); line-height:1.1; margin-bottom:5px; }
+  .hero-url { font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:20px; }
+  .hero-intro { font-size:13px; color:var(--muted); max-width:560px; line-height:1.75; padding-left:16px; border-left:3px solid var(--green); }
+
+  .verdict { background:var(--text); border-radius:10px; padding:26px 30px; margin-bottom:48px; display:flex; align-items:center; gap:24px; }
+  .verdict-divider { width:1px; height:52px; background:rgba(255,255,255,.15); flex-shrink:0; }
+  .verdict-badge { flex-shrink:0; background:rgba(220,38,38,.15); border:1px solid rgba(220,38,38,.35); border-radius:8px; padding:10px 14px; text-align:center; }
+  .verdict-badge-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#f87171; margin-bottom:4px; }
+  .verdict-badge-val { font-size:22px; font-weight:700; color:#f87171; font-family:var(--mono); line-height:1; }
+  .verdict-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:5px; }
+  .verdict-desc { font-size:13px; color:rgba(255,255,255,.6); line-height:1.6; max-width:460px; }
+
+  .section { margin-bottom:44px; }
+  .section-label { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .section-title { font-size:19px; font-weight:700; color:var(--text); letter-spacing:-0.01em; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .cards.three { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:600px){ .cards,.cards.three{ grid-template-columns:1fr; } }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card-label { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--subtle); margin-bottom:7px; }
+  .card-value { font-size:18px; font-weight:700; margin-bottom:6px; letter-spacing:-0.01em; }
+  .card-detail { font-size:12px; color:var(--muted); line-height:1.6; }
+  code { font-family:var(--mono); font-size:11px; background:var(--surface-2); border:1px solid var(--border); padding:1px 5px; border-radius:3px; color:var(--muted); }
+  .cve-tag { font-family:var(--mono); font-size:10px; background:var(--red-soft); border:1px solid var(--red-border); padding:2px 6px; border-radius:4px; color:var(--red); font-weight:600; }
+
+  .c-red { color:var(--red); } .c-orange { color:var(--orange); }
+  .c-yellow { color:var(--yellow); } .c-green { color:var(--green-dark); }
+
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+  .badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .badge-red    { background:var(--red-soft);    color:var(--red);       border:1px solid var(--red-border); }
+  .badge-orange { background:var(--orange-soft); color:var(--orange);    border:1px solid var(--orange-border); }
+  .badge-yellow { background:var(--yellow-soft); color:var(--yellow);    border:1px solid var(--yellow-border); }
+  .badge-green  { background:var(--green-soft);  color:var(--green-dark);border:1px solid var(--green-border); }
+
+  /* Chaîne d'attaque */
+  .chain { display:flex; align-items:stretch; gap:0; margin-top:14px; flex-wrap:wrap; }
+  .chain-step { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:12px 16px; flex:1; min-width:140px; }
+  .chain-step-num { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .chain-step-title { font-size:12px; font-weight:700; color:var(--text); margin-bottom:3px; }
+  .chain-step-desc { font-size:11px; color:var(--muted); line-height:1.5; }
+  .chain-step.danger { border-color:var(--red-border); background:var(--red-soft); }
+  .chain-step.danger .chain-step-title { color:var(--red); }
+  .chain-arrow { font-size:18px; color:var(--border-hi); padding:0 8px; flex-shrink:0; align-self:center; }
+
+  /* Barres de scores */
+  .score-bar-wrap { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:20px 24px; margin-bottom:12px; }
+  .score-bar-row { display:flex; align-items:center; gap:14px; margin-bottom:10px; }
+  .score-bar-row:last-child { margin-bottom:0; }
+  .score-bar-label { font-size:11px; font-weight:600; color:var(--muted); width:120px; flex-shrink:0; }
+  .score-bar-track { flex:1; height:8px; background:var(--surface-2); border-radius:20px; overflow:hidden; border:1px solid var(--border); }
+  .score-bar-fill { height:100%; border-radius:20px; }
+  .fill-green { background:var(--green); } .fill-orange { background:var(--orange); } .fill-red { background:var(--red); }
+  .score-bar-val { font-size:13px; font-weight:700; width:52px; text-align:right; flex-shrink:0; }
+
+  .metric-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-top:10px; }
+  @media(max-width:600px){ .metric-row{ grid-template-columns:1fr; } }
+  .metric { background:var(--surface); border:1px solid var(--border); border-radius:6px; padding:12px 16px; }
+  .metric-label { font-size:10px; font-weight:600; letter-spacing:0.07em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .metric-val { font-size:16px; font-weight:700; }
+  .metric-sub { font-size:11px; color:var(--muted); margin-top:2px; }
+
+  /* Table vulnérabilités */
+  .vuln-table { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-top:12px; }
+  .vuln-row { display:grid; grid-template-columns:1.8fr 1fr 2.2fr; align-items:center; padding:12px 18px; border-bottom:1px solid var(--border); gap:14px; }
+  .vuln-row:last-child { border-bottom:none; }
+  .vuln-row.thead { background:var(--surface-2); }
+  .vuln-row.thead span { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--subtle); }
+  .vuln-name { font-family:var(--mono); font-size:12px; font-weight:500; color:var(--text); }
+  .vuln-impact { font-size:12px; color:var(--muted); line-height:1.5; }
+  @media(max-width:600px){ .vuln-row{ grid-template-columns:1fr; } .vuln-row.thead{ display:none; } }
+
+  /* Alert boxes */
+  .alert-box { border-radius:8px; padding:18px 22px; margin-top:10px; }
+  .alert-box.danger { background:var(--red-soft);    border:1px solid var(--red-border);    border-left:4px solid var(--red); }
+  .alert-box.warn   { background:var(--orange-soft); border:1px solid var(--orange-border); border-left:4px solid var(--orange); }
+  .alert-box.info   { background:var(--yellow-soft); border:1px solid var(--yellow-border); border-left:4px solid var(--yellow); }
+  .alert-box.good   { background:var(--green-soft);  border:1px solid var(--green-border);  border-left:4px solid var(--green); }
+  .alert-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:11px; }
+  .alert-box.danger .alert-title { color:var(--red); }
+  .alert-box.warn   .alert-title { color:var(--orange); }
+  .alert-box.info   .alert-title { color:var(--yellow); }
+  .alert-box.good   .alert-title { color:var(--green-dark); }
+  .ai { flex-shrink:0; margin-top:3px; }
+  .alert-item { display:flex; align-items:flex-start; gap:9px; margin-bottom:8px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .alert-item:last-child { margin-bottom:0; }
+
+  /* Auditeur */
+  .auditor-section { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:26px 30px; margin-top:48px; display:flex; gap:22px; align-items:flex-start; }
+  .auditor-avatar { width:48px; height:48px; border-radius:50%; background:var(--text); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--mono); font-size:14px; font-weight:700; color:#fff; }
+  .auditor-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .auditor-role { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .auditor-tools { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+  .tool-tag { font-family:var(--mono); font-size:10px; background:var(--surface-2); border:1px solid var(--border); padding:2px 7px; border-radius:4px; color:var(--muted); }
+  .auditor-note { font-size:12px; color:var(--subtle); line-height:1.65; font-style:italic; }
+
+  /* CTA */
+  .cta-block { background:var(--text); border-radius:10px; padding:38px 34px; margin-top:18px; text-align:center; }
+  .cta-eyebrow { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px; }
+  .cta-title { font-size:22px; font-weight:700; color:#fff; letter-spacing:-.015em; margin-bottom:8px; }
+  .cta-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:26px; max-width:420px; margin-left:auto; margin-right:auto; line-height:1.65; }
+  .cta-btn { display:inline-block; background:var(--green); color:#fff; font-size:13px; font-weight:700; padding:12px 28px; border-radius:7px; text-decoration:none; letter-spacing:.01em; }
+  .cta-note { font-size:11px; color:rgba(255,255,255,.3); margin-top:14px; font-family:var(--mono); }
+
+  /* Footer */
+  .footer { margin-top:48px; padding-top:22px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-end; gap:16px; }
+  .footer-brand { font-size:11px; color:var(--subtle); line-height:1.8; }
+  .footer-brand strong { color:var(--green); font-weight:600; font-family:var(--mono); }
+  .footer-conf { font-size:10px; color:var(--border-hi); text-align:right; max-width:260px; line-height:1.6; }
+  a { color:var(--green-dark); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-wrap">
+    <img class="logo-img" src="../logo2.png" alt="WP_Architect logo">
+    <div>
+      <div class="logo-tag">Audit · Sécurisation · Optimisation WordPress — Dakar</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="doc-type">Rapport Flash</div>
+    <div class="doc-date">Juin 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Diagnostic Sécurité &amp; Performance — Confidentiel</div>
+  <div class="hero-client">GoWash</div>
+  <div class="hero-url">gowash.sn</div>
+  <p class="hero-intro">Ce rapport présente les résultats d'une analyse passive et non intrusive réalisée sur votre plateforme de réservation WordPress. Il est transmis à titre informatif et gracieux, sans engagement de votre part.</p>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="verdict-badge">
+    <div class="verdict-badge-label">Critique</div>
+    <div class="verdict-badge-val">&#x26A0; 3</div>
+  </div>
+  <div class="verdict-divider"></div>
+  <div>
+    <div class="verdict-title">Données clients exposées en clair — accès aux réservations sans mot de passe</div>
+    <div class="verdict-desc">Aucun chiffrement HTTPS, PHP 8.0 en fin de vie, et une faille CVE-2025-7038 sur LatePoint permettant à n'importe qui d'accéder aux comptes clients avec un simple e-mail. Les données de vos clients ne sont pas protégées.</div>
+  </div>
+</div>
+
+<!-- SECTION 1 : FAILLE MÉTIER DIRECTE -->
+<div class="section">
+  <div class="section-label">Point 01 — Risque métier immédiat</div>
+  <div class="section-title">Un simple e-mail suffit pour accéder aux comptes de vos clients</div>
+
+  <div class="chain">
+    <div class="chain-step">
+      <div class="chain-step-num">Étape 1</div>
+      <div class="chain-step-title">E-mail client connu</div>
+      <div class="chain-step-desc">Un attaquant récupère l'adresse e-mail d'un client GoWash — depuis les réseaux sociaux, un formulaire de contact ou une fuite de données tierce.</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step">
+      <div class="chain-step-num">Étape 2</div>
+      <div class="chain-step-title">Appel AJAX non protégé</div>
+      <div class="chain-step-desc">La route <code>latepoint_route_call</code> via <code>admin-ajax.php</code> accepte une connexion sans mot de passe, sans jeton de sécurité, sans vérification de privilège.</div>
+    </div>
+    <div class="chain-arrow">→</div>
+    <div class="chain-step danger">
+      <div class="chain-step-num">Résultat</div>
+      <div class="chain-step-title">Compte client compromis</div>
+      <div class="chain-step-desc">Accès complet à l'historique des rendez-vous, coordonnées personnelles, e-mail et téléphone — sans que le client ni vous ne soyez alertés.</div>
+    </div>
+  </div>
+
+  <div class="alert-box danger" style="margin-top:14px;">
+    <div class="alert-title">CVE-2025-7038 — Bypass d'authentification LatePoint v5.1.94</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <span><strong>Contournement d'authentification sans privilège requis</strong> — La version installée du plugin de réservation LatePoint (v5.1.94) contient une faille permettant à un utilisateur non authentifié de se connecter au compte d'un client en transmettant uniquement son adresse e-mail, sans mot de passe ni jeton de sécurité.</span>
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Pour un service collectant e-mails, numéros de téléphone et historiques de rendez-vous de véhicules haut de gamme, cette exposition constitue une violation directe des données personnelles de vos clients et engage la responsabilité de GoWash.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 : INFRASTRUCTURE -->
+<div class="section">
+  <div class="section-label">Point 02</div>
+  <div class="section-title">Fondations non sécurisées — HTTP en clair et PHP obsolète</div>
+
+  <div class="cards" style="margin-bottom:12px;">
+    <div class="card">
+      <div class="card-label">Chiffrement HTTPS</div>
+      <div class="card-value c-red">Absent</div>
+      <div class="card-detail">Le site fonctionne uniquement sur HTTP non chiffré. Au moins 51 requêtes transitent en clair, rendant toutes les sessions et données interceptables par un tiers sur le même réseau.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Version PHP</div>
+      <div class="card-value c-red">8.0 <span class="cve-tag">EOL</span></div>
+      <div class="card-detail">PHP 8.0 est officiellement en fin de vie depuis fin 2025. Plus aucun correctif de sécurité n'est publié pour cette branche — les nouvelles vulnérabilités découvertes resteront indéfiniment non corrigées.</div>
+    </div>
+  </div>
+
+  <div class="alert-box danger">
+    <div class="alert-title">Risque MITM — Interception totale des données en transit</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <span>Sans HTTPS, un attaquant positionné sur le même réseau qu'un client (Wi-Fi public, connexion partagée) peut intercepter <strong>l'intégralité des échanges</strong> : formulaires de réservation, données personnelles, sessions de navigation.</span>
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <span>Les navigateurs Chrome et Firefox signalent désormais les sites HTTP comme "Non sécurisé" — un signal négatif visible de vos clients avant même qu'ils remplissent un formulaire.</span>
+    </div>
+  </div>
+
+  <div class="vuln-table" style="margin-top:14px;">
+    <div class="vuln-row thead"><span>Composant</span><span>Statut</span><span>Impact</span></div>
+    <div class="vuln-row">
+      <div class="vuln-name">HTTPS / SSL</div>
+      <div><span class="badge badge-red">Absent</span></div>
+      <div class="vuln-impact">Données clients transmises en clair. Sessions interceptables. Site signalé "Non sécurisé" par les navigateurs.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">PHP 8.0</div>
+      <div><span class="badge badge-red">EOL 2025</span></div>
+      <div class="vuln-impact">Plus aucun correctif de sécurité. Les failles futures resteront non corrigées indéfiniment sur cette version.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">X-Frame-Options</div>
+      <div><span class="badge badge-orange">Absent</span></div>
+      <div class="vuln-impact">Clickjacking possible sur le formulaire de réservation — détournement de clics vers des actions non voulues.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">X-Content-Type-Options</div>
+      <div><span class="badge badge-yellow">Absent</span></div>
+      <div class="vuln-impact">MIME sniffing — le navigateur peut interpréter des fichiers malveillants comme du code légitime.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 : ANOMALIE DRUPAL + ADMIN EXPOSÉ -->
+<div class="section">
+  <div class="section-label">Point 03</div>
+  <div class="section-title">Administration exposée et anomalie de configuration héritée</div>
+
+  <div class="cards" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="card-label">Accès wp-admin</div>
+      <div class="card-value c-red">200 — Ouvert</div>
+      <div class="card-detail"><code>/wp-admin/</code> et <code>/wp-login.php</code> accessibles sans restriction. Cible directe pour les attaques par force brute automatisées.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">En-tête Drupal détecté</div>
+      <div class="card-value c-yellow">Dette technique</div>
+      <div class="card-detail">Le serveur Apache émet un en-tête <code>Link</code> associé à Drupal — incohérent sur une stack WordPress. Artefact de configuration hérité non nettoyé.</div>
+    </div>
+  </div>
+
+  <div class="alert-box info">
+    <div class="alert-title">Anomalie de configuration — signal d'infrastructure mal maîtrisée</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#d97706"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <span>La présence d'un en-tête Drupal sur un serveur hébergeant WordPress trahit une configuration Apache copiée d'un ancien environnement, jamais nettoyée. Ce type d'artefact révèle une dette technique et brouille la signature de l'infrastructure — ce qui peut compliquer le diagnostic en cas d'incident.</span>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 : PERFORMANCE -->
+<div class="section">
+  <div class="section-label">Point 04</div>
+  <div class="section-title">Performance web — marge d'amélioration significative</div>
+
+  <div class="score-bar-wrap">
+    <div class="score-bar-row">
+      <div class="score-bar-label">FCP</div>
+      <div class="score-bar-track"><div class="score-bar-fill fill-orange" style="width:55%"></div></div>
+      <div class="score-bar-val c-orange">0.55</div>
+    </div>
+    <div class="score-bar-row">
+      <div class="score-bar-label">LCP</div>
+      <div class="score-bar-track"><div class="score-bar-fill fill-orange" style="width:43%"></div></div>
+      <div class="score-bar-val c-orange">0.43</div>
+    </div>
+    <div class="score-bar-row">
+      <div class="score-bar-label">Speed Index</div>
+      <div class="score-bar-track"><div class="score-bar-fill fill-orange" style="width:41%"></div></div>
+      <div class="score-bar-val c-orange">0.41</div>
+    </div>
+  </div>
+
+  <div class="metric-row">
+    <div class="metric">
+      <div class="metric-label">First Contentful Paint</div>
+      <div class="metric-val c-orange">1,5 s</div>
+      <div class="metric-sub">Correct · Seuil recommandé : &lt; 1,8 s</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Largest Contentful Paint</div>
+      <div class="metric-val c-orange">2,6 s</div>
+      <div class="metric-sub">Passable · Seuil recommandé : &lt; 2,5 s</div>
+    </div>
+    <div class="metric">
+      <div class="metric-label">Speed Index</div>
+      <div class="metric-val c-orange">2,5 s</div>
+      <div class="metric-sub">Passable · Seuil recommandé : &lt; 2,3 s</div>
+    </div>
+  </div>
+
+  <div class="alert-box warn" style="margin-top:12px;">
+    <div class="alert-title">Un LCP à 2,6 s affecte directement vos conversions et votre référencement</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Google intègre le LCP dans son algorithme de classement (Core Web Vitals). Un LCP supérieur à 2,5 secondes pénalise votre positionnement dans les résultats de recherche locale — là où vos clients vous trouvent.
+    </div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Une réduction du LCP sous les 2 secondes est atteignable sans refonte — optimisation d'images, cache serveur et migration HTTPS simultanée permettent souvent un gain de 30 à 50%.
+    </div>
+  </div>
+</div>
+
+<!-- AUDITEUR -->
+<div class="auditor-section">
+  <div class="auditor-avatar">SB</div>
+  <div>
+    <div class="auditor-name">Sereigne Bara Thiam</div>
+    <div class="auditor-role">Auditeur WordPress · Fondateur WP_Architect · Dakar, Sénégal</div>
+    <div class="auditor-tools">
+      <span class="tool-tag">WhatWeb</span>
+      <span class="tool-tag">WPScan</span>
+      <span class="tool-tag">Nikto</span>
+      <span class="tool-tag">Nmap</span>
+      <span class="tool-tag">Lighthouse CLI</span>
+      <span class="tool-tag">Kali Linux</span>
+    </div>
+    <div class="auditor-note">Analyse réalisée en mode passif et non intrusif. Aucune donnée du site n'a été accédée, modifiée ou extraite. Ce rapport est fourni gracieusement, à titre informatif uniquement.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">Prochaine étape</div>
+  <div class="cta-title">Une question sur ce rapport ?</div>
+  <div class="cta-sub">Répondez simplement à cet email. Je vous propose un plan de remédiation concret : activation HTTPS, mise à jour PHP et LatePoint, sécurisation de l'accès admin et correction des headers — sans perturbation de service.</div>
+  <a class="cta-btn" href="mailto:bara.wp.architect@gmail.com?subject=Rapport%20Flash%20GoWash%20%E2%80%94%20Question">Répondre par email</a>
+  <div class="cta-note">bara.wp.architect@gmail.com · Réponse sous 24h · Sans engagement</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">
+    <strong>WP_Architect.</strong><br>
+    Sereigne Bara Thiam · Dakar, Sénégal<br>
+    <strong>Site officiel</strong> : <a href="https://wp-architect.vercel.app" target="_blank">wp-architect.vercel.app</a>
+  </div>
+  <div class="footer-conf">Document confidentiel · Analyse passive non intrusive · Transmis à titre gracieux et informatif uniquement.</div>
+</footer>
+
+</body>
+</html>
