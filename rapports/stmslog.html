@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport Flash · STMS Logistique · WP_Architect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#f9f9f7; --surface:#ffffff; --surface-2:#f2f2ef;
+    --border:#e4e4e0; --border-hi:#cbcbc6;
+    --text:#111110; --muted:#5a5a56; --subtle:#96968f;
+    --green:#22c55e; --green-dark:#16a34a; --green-soft:#f0fdf4; --green-border:#bbf7d0;
+    --red:#dc2626; --red-soft:#fef2f2; --red-border:#fecaca;
+    --orange:#ea580c; --orange-soft:#fff7ed; --orange-border:#fed7aa;
+    --yellow:#d97706; --yellow-soft:#fffbeb; --yellow-border:#fde68a;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+  }
+  html { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  body { max-width:820px; margin:0 auto; padding:52px 36px 80px; }
+
+  .header { display:flex; justify-content:space-between; align-items:center; padding-bottom:28px; border-bottom:2px solid var(--text); margin-bottom:48px; }
+  .logo-wrap { display:flex; align-items:center; gap:14px; }
+  .logo-img { height:100px; width:auto; display:block; }
+  .logo-tag { font-size:10px; color:var(--muted); letter-spacing:0.04em; margin-top:2px; }
+  .header-right { text-align:right; }
+  .doc-type { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .doc-date { font-size:14px; font-weight:600; color:var(--text); margin-top:3px; }
+
+  .hero { margin-bottom:44px; }
+  .hero-eyebrow { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:10px; }
+  .hero-client { font-size:38px; font-weight:700; letter-spacing:-0.025em; color:var(--text); line-height:1.1; margin-bottom:5px; }
+  .hero-url { font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:20px; }
+  .hero-intro { font-size:13px; color:var(--muted); max-width:560px; line-height:1.75; padding-left:16px; border-left:3px solid var(--green); }
+
+  .verdict { background:var(--text); border-radius:10px; padding:26px 30px; margin-bottom:48px; display:flex; align-items:center; gap:24px; }
+  .verdict-divider { width:1px; height:52px; background:rgba(255,255,255,.15); flex-shrink:0; }
+  .verdict-badge { flex-shrink:0; background:rgba(234,88,12,.15); border:1px solid rgba(234,88,12,.35); border-radius:8px; padding:10px 14px; text-align:center; }
+  .verdict-badge-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#fb923c; margin-bottom:4px; }
+  .verdict-badge-val { font-size:22px; font-weight:700; color:#fb923c; font-family:var(--mono); line-height:1; }
+  .verdict-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:5px; }
+  .verdict-desc { font-size:13px; color:rgba(255,255,255,.6); line-height:1.6; max-width:460px; }
+
+  .section { margin-bottom:44px; }
+  .section-label { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .section-title { font-size:19px; font-weight:700; color:var(--text); letter-spacing:-0.01em; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .cards.three { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:600px){ .cards,.cards.three{ grid-template-columns:1fr; } }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card-label { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--subtle); margin-bottom:7px; }
+  .card-value { font-size:18px; font-weight:700; margin-bottom:6px; letter-spacing:-0.01em; }
+  .card-detail { font-size:12px; color:var(--muted); line-height:1.6; }
+  code { font-family:var(--mono); font-size:11px; background:var(--surface-2); border:1px solid var(--border); padding:1px 5px; border-radius:3px; color:var(--muted); }
+
+  .c-red { color:var(--red); } .c-orange { color:var(--orange); }
+  .c-yellow { color:var(--yellow); } .c-green { color:var(--green-dark); }
+
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+  .badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .badge-red    { background:var(--red-soft);    color:var(--red);       border:1px solid var(--red-border); }
+  .badge-orange { background:var(--orange-soft); color:var(--orange);    border:1px solid var(--orange-border); }
+  .badge-yellow { background:var(--yellow-soft); color:var(--yellow);    border:1px solid var(--yellow-border); }
+  .badge-green  { background:var(--green-soft);  color:var(--green-dark);border:1px solid var(--green-border); }
+
+  /* Risk blocks */
+  .risk-block { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px 24px; margin-bottom:12px; }
+  .risk-header { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+  .risk-icon { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .risk-icon.red { background:var(--red-soft); }
+  .risk-icon.orange { background:var(--orange-soft); }
+  .risk-icon.yellow { background:var(--yellow-soft); }
+  .risk-icon.green { background:var(--green-soft); }
+  .risk-meta { flex:1; }
+  .risk-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .risk-sub { font-size:11px; color:var(--subtle); }
+  .risk-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+  .risk-impact { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); display:flex; align-items:flex-start; gap:10px; }
+  .risk-impact-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; flex-shrink:0; margin-top:1px; }
+  .risk-impact-label.red { color:var(--red); }
+  .risk-impact-label.orange { color:var(--orange); }
+  .risk-impact-label.yellow { color:var(--yellow); }
+  .risk-impact-label.green { color:var(--green-dark); }
+  .risk-impact-text { font-size:12px; color:var(--muted); line-height:1.6; }
+
+  /* Alert boxes */
+  .alert-box { border-radius:8px; padding:18px 22px; margin-top:10px; }
+  .alert-box.danger { background:var(--red-soft);    border:1px solid var(--red-border);    border-left:4px solid var(--red); }
+  .alert-box.warn   { background:var(--orange-soft); border:1px solid var(--orange-border); border-left:4px solid var(--orange); }
+  .alert-box.info   { background:var(--yellow-soft); border:1px solid var(--yellow-border); border-left:4px solid var(--yellow); }
+  .alert-box.good   { background:var(--green-soft);  border:1px solid var(--green-border);  border-left:4px solid var(--green); }
+  .alert-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:11px; }
+  .alert-box.danger .alert-title { color:var(--red); }
+  .alert-box.warn   .alert-title { color:var(--orange); }
+  .alert-box.info   .alert-title { color:var(--yellow); }
+  .alert-box.good   .alert-title { color:var(--green-dark); }
+  .ai { flex-shrink:0; margin-top:3px; }
+  .alert-item { display:flex; align-items:flex-start; gap:9px; margin-bottom:8px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .alert-item:last-child { margin-bottom:0; }
+
+  /* Table synthèse */
+  .vuln-table { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-top:12px; }
+  .vuln-row { display:grid; grid-template-columns:2fr 1fr 2fr; align-items:center; padding:12px 18px; border-bottom:1px solid var(--border); gap:14px; }
+  .vuln-row:last-child { border-bottom:none; }
+  .vuln-row.thead { background:var(--surface-2); }
+  .vuln-row.thead span { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--subtle); }
+  .vuln-name { font-size:13px; font-weight:600; color:var(--text); }
+  .vuln-impact { font-size:12px; color:var(--muted); line-height:1.5; }
+  @media(max-width:600px){ .vuln-row{ grid-template-columns:1fr; } .vuln-row.thead{ display:none; } }
+
+  /* Auditeur */
+  .auditor-section { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:26px 30px; margin-top:48px; display:flex; gap:22px; align-items:flex-start; }
+  .auditor-avatar { width:48px; height:48px; border-radius:50%; background:var(--text); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--mono); font-size:14px; font-weight:700; color:#fff; }
+  .auditor-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .auditor-role { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .auditor-tools { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+  .tool-tag { font-family:var(--mono); font-size:10px; background:var(--surface-2); border:1px solid var(--border); padding:2px 7px; border-radius:4px; color:var(--muted); }
+  .auditor-note { font-size:12px; color:var(--subtle); line-height:1.65; font-style:italic; }
+
+  /* CTA */
+  .cta-block { background:var(--text); border-radius:10px; padding:38px 34px; margin-top:18px; text-align:center; }
+  .cta-eyebrow { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px; }
+  .cta-title { font-size:22px; font-weight:700; color:#fff; letter-spacing:-.015em; margin-bottom:8px; }
+  .cta-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:26px; max-width:420px; margin-left:auto; margin-right:auto; line-height:1.65; }
+  .cta-btn { display:inline-block; background:var(--green); color:#fff; font-size:13px; font-weight:700; padding:12px 28px; border-radius:7px; text-decoration:none; letter-spacing:.01em; }
+  .cta-note { font-size:11px; color:rgba(255,255,255,.3); margin-top:14px; font-family:var(--mono); }
+
+  /* Footer */
+  .footer { margin-top:48px; padding-top:22px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-end; gap:16px; }
+  .footer-brand { font-size:11px; color:var(--subtle); line-height:1.8; }
+  .footer-brand strong { color:var(--green); font-weight:600; font-family:var(--mono); }
+  .footer-conf { font-size:10px; color:var(--border-hi); text-align:right; max-width:260px; line-height:1.6; }
+  a { color:var(--green-dark); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-wrap">
+    <img class="logo-img" src="../logo2.png" alt="WP_Architect logo">
+    <div>
+      <div class="logo-tag">Audit · Sécurisation · Optimisation WordPress — Dakar</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="doc-type">Rapport Flash</div>
+    <div class="doc-date">Juillet 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Diagnostic Sécurité — Confidentiel</div>
+  <div class="hero-client">STMS Logistique</div>
+  <div class="hero-url">stms-log.com</div>
+  <p class="hero-intro">Ce rapport présente les résultats d'une analyse passive et non intrusive réalisée sur votre site WordPress. Il est transmis à titre informatif et gracieux, sans engagement de votre part. Les constats sont exprimés en termes d'impact concret, sans jargon technique.</p>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="verdict-badge">
+    <div class="verdict-badge-label">Attention</div>
+    <div class="verdict-badge-val">&#x26A0; 4</div>
+  </div>
+  <div class="verdict-divider"></div>
+  <div>
+    <div class="verdict-title">Bonne base — mais plusieurs angles ouverts qui facilitent la reconnaissance et l'intrusion</div>
+    <div class="verdict-desc">L'accès administration est partiellement protégé, ce qui est un bon point. Mais la version exacte de PHP ne peut être vérifiée, la page de connexion reste exposée, l'infrastructure OVH est révélée dans les en-têtes, et le fichier robots.txt peut cartographier l'architecture interne du site.</div>
+  </div>
+</div>
+
+<!-- SECTION 1 : CE QUI VA BIEN -->
+<div class="section">
+  <div class="section-label">Point 01 — Ce qui fonctionne bien</div>
+  <div class="section-title">Un effort de configuration visible — et un choix d'hébergeur structuré</div>
+
+  <div class="cards">
+    <div class="card">
+      <div class="card-label">Accès wp-admin</div>
+      <div class="card-value c-green">Protégé</div>
+      <div class="card-detail">Le panneau d'administration principal (<code>/wp-admin/</code>) ne répond pas publiquement — il retourne une erreur de connexion plutôt qu'une page d'accès. C'est une mesure de durcissement correctement appliquée, rare dans le paysage local.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">Infrastructure</div>
+      <div class="card-value c-green">OVHcloud</div>
+      <div class="card-detail">Hébergeur européen avec infrastructure de load-balancing dédiée. Le choix d'un hébergeur structuré avec reverse proxy (OpenResty) témoigne d'une approche technique plus mature que l'hébergement mutualisé standard.</div>
+    </div>
+  </div>
+
+  <div class="alert-box good" style="margin-top:12px;">
+    <div class="alert-title">La protection de wp-admin est une bonne décision — à étendre à wp-login.php</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#16a34a"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Protéger l'accès principal d'administration est la première barrière contre les attaques automatisées. La démarche est bonne — mais elle n'est qu'à moitié appliquée (voir Point 02).
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 : PHP NON VÉRIFIABLE -->
+<div class="section">
+  <div class="section-label">Point 02 — Risque potentiel majeur</div>
+  <div class="section-title">Version du serveur non vérifiable — impossible de confirmer les correctifs de sécurité 2026</div>
+
+  <div class="risk-block">
+    <div class="risk-header">
+      <div class="risk-icon orange">🟠</div>
+      <div class="risk-meta">
+        <div class="risk-title">PHP 8.4 détecté — numéro de révision exact non exposé</div>
+        <div class="risk-sub">Branche active · Correctifs requis jusqu'à la version 8.4.21 minimum</div>
+      </div>
+      <span class="badge badge-orange">À vérifier</span>
+    </div>
+    <div class="risk-desc">
+      Votre serveur fait tourner PHP 8.4, une branche activement maintenue en 2026 — ce qui est en soi une bonne chose. Cependant, le serveur ne publie pas son numéro de révision exact, ce qui rend impossible la vérification que les derniers correctifs de sécurité ont bien été appliqués.
+      <br><br>
+      Des bulletins de sécurité récents signalent que toutes les sous-versions de PHP 8.4 antérieures à la 8.4.21 sont vulnérables à des failles critiques — déni de service, injection, et dans certains cas exécution de code à distance. Sans confirmation du numéro exact, le risque ne peut être ni confirmé ni exclu.
+    </div>
+    <div class="risk-impact">
+      <div class="risk-impact-label orange">Impact potentiel</div>
+      <div class="risk-impact-text">Si la version installée est antérieure à PHP 8.4.21, des vulnérabilités critiques documentées en 2026 s'appliquent à votre infrastructure. Une vérification interne de la version exacte est la première action à mener.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 : WP-LOGIN + HEADERS -->
+<div class="section">
+  <div class="section-label">Point 03 — Exposition directe</div>
+  <div class="section-title">Page de connexion accessible et protections navigateur absentes</div>
+
+  <div class="cards" style="margin-bottom:14px;">
+    <div class="card">
+      <div class="card-label">wp-login.php</div>
+      <div class="card-value c-red">200 — Accessible</div>
+      <div class="card-detail">La page de connexion WordPress reste accessible publiquement alors que le panneau d'administration est lui protégé. La protection est incomplète — les outils automatisés ciblent précisément cette page pour tenter d'entrer par force brute.</div>
+    </div>
+    <div class="card">
+      <div class="card-label">En-têtes navigateur</div>
+      <div class="card-value c-yellow">2 absents</div>
+      <div class="card-detail"><code>X-Frame-Options</code> et <code>X-Content-Type-Options</code> non configurés. Protections contre le détournement de clics et l'exécution de fichiers malveillants côté visiteur.</div>
+    </div>
+  </div>
+
+  <div class="alert-box warn">
+    <div class="alert-title">La protection de wp-admin sans wp-login.php est une demi-mesure</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#ea580c"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      <code>/wp-login.php</code> est la porte d'entrée principale que les robots utilisent pour les attaques par mots de passe. Bloquer <code>/wp-admin/</code> tout en laissant <code>/wp-login.php</code> ouvert, c'est fermer la porte principale mais laisser la fenêtre ouverte. Les deux points doivent être traités ensemble.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 4 : RECONNAISSANCE / FUITE INFRA -->
+<div class="section">
+  <div class="section-label">Point 04 — Exposition de l'architecture</div>
+  <div class="section-title">En-têtes OVH et robots.txt — votre infrastructure est cartographiable de l'extérieur</div>
+
+  <div class="risk-block">
+    <div class="risk-header">
+      <div class="risk-icon yellow">🟡</div>
+      <div class="risk-meta">
+        <div class="risk-title">Identifiants d'infrastructure OVHcloud visibles dans les réponses HTTP</div>
+        <div class="risk-sub">x-iplb-request-id · x-iplb-instance · x-ovh-webhosting-id</div>
+      </div>
+      <span class="badge badge-yellow">Mineur</span>
+    </div>
+    <div class="risk-desc">
+      Chaque réponse de votre serveur inclut des en-têtes qui révèlent l'utilisation d'OVHcloud et des identifiants internes de votre cluster d'hébergement. Ces informations ne constituent pas une faille exploitable directement — mais elles réduisent significativement le travail de reconnaissance d'un attaquant qui cherche à cibler votre infrastructure.
+      <br><br>
+      Un attaquant qui connaît votre hébergeur exact peut adapter ses outils et techniques aux vulnérabilités ou aux configurations spécifiques à cet environnement. Ces en-têtes peuvent être supprimés en quelques lignes de configuration sans aucun impact sur le fonctionnement du site.
+    </div>
+    <div class="risk-impact">
+      <div class="risk-impact-label yellow">Impact</div>
+      <div class="risk-impact-text">Facilite la phase de reconnaissance avancée. À corriger en priorité basse, mais sans effort significatif.</div>
+    </div>
+  </div>
+
+  <div class="risk-block" style="margin-top:0;">
+    <div class="risk-header">
+      <div class="risk-icon yellow">🟡</div>
+      <div class="risk-meta">
+        <div class="risk-title">Fichier robots.txt potentiellement trop verbeux</div>
+        <div class="risk-sub">Directives personnalisées détectées</div>
+      </div>
+      <span class="badge badge-yellow">Mineur</span>
+    </div>
+    <div class="risk-desc">
+      Votre fichier <code>robots.txt</code> contient des directives personnalisées. Ce fichier, accessible publiquement par définition, peut révéler des chemins d'accès internes — interfaces d'administration secondaires, environnements de test, APIs privées — que vous souhaiteriez garder discrets. S'il liste des URLs sensibles sans que celles-ci soient protégées par ailleurs, il agit comme un plan du site pour un attaquant.
+    </div>
+    <div class="risk-impact">
+      <div class="risk-impact-label yellow">Impact</div>
+      <div class="risk-impact-text">À auditer : vérifier que les chemins listés dans robots.txt sont soit publics par nature, soit correctement sécurisés par d'autres moyens.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SYNTHÈSE -->
+<div class="section">
+  <div class="section-label">Synthèse</div>
+  <div class="section-title">Plan de remédiation — quatre actions par ordre de priorité</div>
+
+  <div class="vuln-table">
+    <div class="vuln-row thead"><span>Action</span><span>Priorité</span><span>Ce que ça corrige</span></div>
+    <div class="vuln-row">
+      <div class="vuln-name">Vérifier la version PHP exacte installée</div>
+      <div><span class="badge badge-orange">Urgente</span></div>
+      <div class="vuln-impact">Confirmer ou exclure les vulnérabilités critiques 2026. Si version &lt; 8.4.21, appliquer les correctifs immédiatement.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Protéger wp-login.php</div>
+      <div><span class="badge badge-orange">Élevée</span></div>
+      <div class="vuln-impact">Complète la protection déjà en place sur wp-admin. Bloque les attaques automatisées par mots de passe sur la porte d'entrée restante.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Configurer les en-têtes HTTP navigateur</div>
+      <div><span class="badge badge-yellow">Normale</span></div>
+      <div class="vuln-impact">Active les protections contre le détournement de clics et l'exécution de fichiers malveillants côté visiteur.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Supprimer les en-têtes OVH + auditer robots.txt</div>
+      <div><span class="badge badge-yellow">Basse</span></div>
+      <div class="vuln-impact">Réduit l'empreinte technique visible de l'extérieur. Limite les informations disponibles lors d'une reconnaissance externe.</div>
+    </div>
+  </div>
+</div>
+
+<!-- AUDITEUR -->
+<div class="auditor-section">
+  <div class="auditor-avatar">SB</div>
+  <div>
+    <div class="auditor-name">Sereigne Bara Thiam</div>
+    <div class="auditor-role">Auditeur WordPress · Fondateur WP_Architect · Dakar, Sénégal</div>
+    <div class="auditor-tools">
+      <span class="tool-tag">WhatWeb</span>
+      <span class="tool-tag">WPScan</span>
+      <span class="tool-tag">Nikto</span>
+      <span class="tool-tag">Nmap</span>
+      <span class="tool-tag">Lighthouse CLI</span>
+      <span class="tool-tag">Kali Linux</span>
+    </div>
+    <div class="auditor-note">Analyse réalisée en mode passif et non intrusif. Aucune donnée du site n'a été accédée, modifiée ou extraite. Ce rapport est fourni gracieusement, à titre informatif uniquement.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">Prochaine étape</div>
+  <div class="cta-title">Une question sur ce rapport ?</div>
+  <div class="cta-sub">Répondez simplement à cet email. Je vous propose un plan d'action concret et un échange sans engagement.</div>
+  <a class="cta-btn" href="mailto:bara.wp.architect@gmail.com?subject=Rapport%20Flash%20STMS%20Logistique%20%E2%80%94%20Question">Répondre par email</a>
+  <div class="cta-note">bara.wp.architect@gmail.com · Réponse sous 24h · Sans engagement</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">
+    <strong>WP_Architect.</strong><br>
+    Sereigne Bara Thiam · Dakar, Sénégal<br>
+    <strong>Site officiel</strong> : <a href="https://wp-architect.vercel.app" target="_blank">wp-architect.vercel.app</a>
+  </div>
+  <div class="footer-conf">Document confidentiel · Analyse passive non intrusive · Transmis à titre gracieux et informatif uniquement.</div>
+</footer>
+
+</body>
+</html>
