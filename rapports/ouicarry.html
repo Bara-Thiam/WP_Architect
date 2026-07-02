@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapport Flash · OuiCarry · WP_Architect</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg:#f9f9f7; --surface:#ffffff; --surface-2:#f2f2ef;
+    --border:#e4e4e0; --border-hi:#cbcbc6;
+    --text:#111110; --muted:#5a5a56; --subtle:#96968f;
+    --green:#22c55e; --green-dark:#16a34a; --green-soft:#f0fdf4; --green-border:#bbf7d0;
+    --red:#dc2626; --red-soft:#fef2f2; --red-border:#fecaca;
+    --orange:#ea580c; --orange-soft:#fff7ed; --orange-border:#fed7aa;
+    --yellow:#d97706; --yellow-soft:#fffbeb; --yellow-border:#fde68a;
+    --mono:'JetBrains Mono',monospace; --sans:'Inter',system-ui,sans-serif;
+  }
+  html { background:var(--bg); color:var(--text); font-family:var(--sans); font-size:14px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+  body { max-width:820px; margin:0 auto; padding:52px 36px 80px; }
+
+  .header { display:flex; justify-content:space-between; align-items:center; padding-bottom:28px; border-bottom:2px solid var(--text); margin-bottom:48px; }
+  .logo-wrap { display:flex; align-items:center; gap:14px; }
+  .logo-img { height:100px; width:auto; display:block; }
+  .logo-tag { font-size:10px; color:var(--muted); letter-spacing:0.04em; margin-top:2px; }
+  .header-right { text-align:right; }
+  .doc-type { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--muted); }
+  .doc-date { font-size:14px; font-weight:600; color:var(--text); margin-top:3px; }
+
+  .hero { margin-bottom:44px; }
+  .hero-eyebrow { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:10px; }
+  .hero-client { font-size:38px; font-weight:700; letter-spacing:-0.025em; color:var(--text); line-height:1.1; margin-bottom:5px; }
+  .hero-url { font-family:var(--mono); font-size:12px; color:var(--muted); margin-bottom:20px; }
+  .hero-intro { font-size:13px; color:var(--muted); max-width:560px; line-height:1.75; padding-left:16px; border-left:3px solid var(--green); }
+
+  .verdict { background:var(--text); border-radius:10px; padding:26px 30px; margin-bottom:48px; display:flex; align-items:center; gap:24px; }
+  .verdict-divider { width:1px; height:52px; background:rgba(255,255,255,.15); flex-shrink:0; }
+  .verdict-badge { flex-shrink:0; background:rgba(220,38,38,.15); border:1px solid rgba(220,38,38,.35); border-radius:8px; padding:10px 14px; text-align:center; }
+  .verdict-badge-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:#f87171; margin-bottom:4px; }
+  .verdict-badge-val { font-size:22px; font-weight:700; color:#f87171; font-family:var(--mono); line-height:1; }
+  .verdict-title { font-size:16px; font-weight:700; color:#fff; margin-bottom:5px; }
+  .verdict-desc { font-size:13px; color:rgba(255,255,255,.6); line-height:1.6; max-width:460px; }
+
+  .section { margin-bottom:44px; }
+  .section-label { font-size:10px; font-weight:700; letter-spacing:0.12em; text-transform:uppercase; color:var(--subtle); margin-bottom:4px; }
+  .section-title { font-size:19px; font-weight:700; color:var(--text); letter-spacing:-0.01em; margin-bottom:18px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+
+  .cards { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .cards.three { grid-template-columns:1fr 1fr 1fr; }
+  @media(max-width:600px){ .cards,.cards.three{ grid-template-columns:1fr; } }
+  .card { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:18px 20px; }
+  .card-label { font-size:10px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--subtle); margin-bottom:7px; }
+  .card-value { font-size:18px; font-weight:700; margin-bottom:6px; letter-spacing:-0.01em; }
+  .card-detail { font-size:12px; color:var(--muted); line-height:1.6; }
+  code { font-family:var(--mono); font-size:11px; background:var(--surface-2); border:1px solid var(--border); padding:1px 5px; border-radius:3px; color:var(--muted); }
+
+  .c-red { color:var(--red); } .c-orange { color:var(--orange); }
+  .c-yellow { color:var(--yellow); } .c-green { color:var(--green-dark); }
+
+  .badge { display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:10px; font-weight:600; letter-spacing:.05em; text-transform:uppercase; }
+  .badge::before { content:''; width:5px; height:5px; border-radius:50%; background:currentColor; }
+  .badge-red    { background:var(--red-soft);    color:var(--red);       border:1px solid var(--red-border); }
+  .badge-orange { background:var(--orange-soft); color:var(--orange);    border:1px solid var(--orange-border); }
+  .badge-yellow { background:var(--yellow-soft); color:var(--yellow);    border:1px solid var(--yellow-border); }
+  .badge-green  { background:var(--green-soft);  color:var(--green-dark);border:1px solid var(--green-border); }
+
+  /* Risque cards — format impact métier */
+  .risk-block { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:22px 24px; margin-bottom:12px; }
+  .risk-header { display:flex; align-items:center; gap:14px; margin-bottom:14px; }
+  .risk-icon { width:40px; height:40px; border-radius:8px; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0; }
+  .risk-icon.red { background:var(--red-soft); }
+  .risk-icon.orange { background:var(--orange-soft); }
+  .risk-icon.yellow { background:var(--yellow-soft); }
+  .risk-meta { flex:1; }
+  .risk-title { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .risk-sub { font-size:11px; color:var(--subtle); }
+  .risk-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+  .risk-impact { margin-top:12px; padding-top:12px; border-top:1px solid var(--border); display:flex; align-items:flex-start; gap:10px; }
+  .risk-impact-label { font-size:10px; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:var(--red); flex-shrink:0; margin-top:1px; }
+  .risk-impact-text { font-size:12px; color:var(--muted); line-height:1.6; }
+
+  /* Alert boxes */
+  .alert-box { border-radius:8px; padding:18px 22px; margin-top:10px; }
+  .alert-box.danger { background:var(--red-soft);    border:1px solid var(--red-border);    border-left:4px solid var(--red); }
+  .alert-box.warn   { background:var(--orange-soft); border:1px solid var(--orange-border); border-left:4px solid var(--orange); }
+  .alert-box.info   { background:var(--yellow-soft); border:1px solid var(--yellow-border); border-left:4px solid var(--yellow); }
+  .alert-title { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; margin-bottom:11px; }
+  .alert-box.danger .alert-title { color:var(--red); }
+  .alert-box.warn   .alert-title { color:var(--orange); }
+  .alert-box.info   .alert-title { color:var(--yellow); }
+  .ai { flex-shrink:0; margin-top:3px; }
+  .alert-item { display:flex; align-items:flex-start; gap:9px; margin-bottom:8px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .alert-item:last-child { margin-bottom:0; }
+
+  /* Synthèse tableau */
+  .vuln-table { background:var(--surface); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-top:12px; }
+  .vuln-row { display:grid; grid-template-columns:2fr 1fr 2fr; align-items:center; padding:12px 18px; border-bottom:1px solid var(--border); gap:14px; }
+  .vuln-row:last-child { border-bottom:none; }
+  .vuln-row.thead { background:var(--surface-2); }
+  .vuln-row.thead span { font-size:10px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--subtle); }
+  .vuln-name { font-size:13px; font-weight:600; color:var(--text); }
+  .vuln-impact { font-size:12px; color:var(--muted); line-height:1.5; }
+  @media(max-width:600px){ .vuln-row{ grid-template-columns:1fr; } .vuln-row.thead{ display:none; } }
+
+  /* Auditeur */
+  .auditor-section { background:var(--surface); border:1px solid var(--border); border-radius:8px; padding:26px 30px; margin-top:48px; display:flex; gap:22px; align-items:flex-start; }
+  .auditor-avatar { width:48px; height:48px; border-radius:50%; background:var(--text); display:flex; align-items:center; justify-content:center; flex-shrink:0; font-family:var(--mono); font-size:14px; font-weight:700; color:#fff; }
+  .auditor-name { font-size:15px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .auditor-role { font-size:12px; color:var(--muted); margin-bottom:12px; }
+  .auditor-tools { display:flex; flex-wrap:wrap; gap:5px; margin-bottom:12px; }
+  .tool-tag { font-family:var(--mono); font-size:10px; background:var(--surface-2); border:1px solid var(--border); padding:2px 7px; border-radius:4px; color:var(--muted); }
+  .auditor-note { font-size:12px; color:var(--subtle); line-height:1.65; font-style:italic; }
+
+  /* CTA */
+  .cta-block { background:var(--text); border-radius:10px; padding:38px 34px; margin-top:18px; text-align:center; }
+  .cta-eyebrow { font-size:10px; font-weight:700; letter-spacing:.12em; text-transform:uppercase; color:rgba(255,255,255,.4); margin-bottom:10px; }
+  .cta-title { font-size:22px; font-weight:700; color:#fff; letter-spacing:-.015em; margin-bottom:8px; }
+  .cta-sub { font-size:13px; color:rgba(255,255,255,.55); margin-bottom:26px; max-width:420px; margin-left:auto; margin-right:auto; line-height:1.65; }
+  .cta-btn { display:inline-block; background:var(--green); color:#fff; font-size:13px; font-weight:700; padding:12px 28px; border-radius:7px; text-decoration:none; letter-spacing:.01em; }
+  .cta-note { font-size:11px; color:rgba(255,255,255,.3); margin-top:14px; font-family:var(--mono); }
+
+  /* Footer */
+  .footer { margin-top:48px; padding-top:22px; border-top:1px solid var(--border); display:flex; justify-content:space-between; align-items:flex-end; gap:16px; }
+  .footer-brand { font-size:11px; color:var(--subtle); line-height:1.8; }
+  .footer-brand strong { color:var(--green); font-weight:600; font-family:var(--mono); }
+  .footer-conf { font-size:10px; color:var(--border-hi); text-align:right; max-width:260px; line-height:1.6; }
+  a { color:var(--green-dark); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="logo-wrap">
+    <img class="logo-img" src="../logo2.png" alt="WP_Architect logo">
+    <div>
+      <div class="logo-tag">Audit · Sécurisation · Optimisation WordPress — Dakar</div>
+    </div>
+  </div>
+  <div class="header-right">
+    <div class="doc-type">Rapport Flash</div>
+    <div class="doc-date">Juin 2026</div>
+  </div>
+</header>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-eyebrow">Diagnostic Sécurité — Confidentiel</div>
+  <div class="hero-client">OuiCarry</div>
+  <div class="hero-url">ouicarry.com</div>
+  <p class="hero-intro">Ce rapport présente les résultats d'une analyse passive et non intrusive réalisée sur votre plateforme logistique. Il est transmis à titre informatif et gracieux, sans engagement de votre part. Les constats sont exprimés en termes d'impact métier, sans jargon technique.</p>
+</div>
+
+<!-- VERDICT -->
+<div class="verdict">
+  <div class="verdict-badge">
+    <div class="verdict-badge-label">Critique</div>
+    <div class="verdict-badge-val">&#x26A0; 3</div>
+  </div>
+  <div class="verdict-divider"></div>
+  <div>
+    <div class="verdict-title">Infrastructure serveur hors support depuis 2021 — trois vecteurs d'attaque ouverts</div>
+    <div class="verdict-desc">Le serveur fait tourner une version de PHP abandonnée depuis fin 2021, sans correctifs de sécurité depuis plus de 4 ans. Combiné à un accès administration sans restriction et à des protections navigateur absentes, le site expose directement les données clients et la continuité du service.</div>
+  </div>
+</div>
+
+<!-- SECTION 1 : SERVEUR HORS SUPPORT -->
+<div class="section">
+  <div class="section-label">Point 01 — Risque le plus grave</div>
+  <div class="section-title">Le moteur du serveur n'est plus maintenu depuis fin 2021</div>
+
+  <div class="risk-block">
+    <div class="risk-header">
+      <div class="risk-icon red">🔴</div>
+      <div class="risk-meta">
+        <div class="risk-title">Technologie serveur abandonnée — aucun correctif depuis 4 ans</div>
+        <div class="risk-sub">PHP 7.3.31 · Fin de vie : décembre 2021</div>
+      </div>
+      <span class="badge badge-red">Critique</span>
+    </div>
+    <div class="risk-desc">
+      La technologie qui fait fonctionner votre serveur (PHP 7.3) a officiellement cessé d'être maintenue fin 2021. Depuis lors, toutes les failles de sécurité découvertes sur cette version restent sans correctif — elles s'accumulent, connues des attaquants, sans jamais être bouchées.
+      <br><br>
+      L'une de ces failles (référencée CVE-2021-21703) permet à un attaquant ayant un accès partiel au serveur de prendre le contrôle total de la machine — y compris d'accéder à votre base de données clients, vos données de livraison et vos configurations de paiement.
+    </div>
+    <div class="risk-impact">
+      <div class="risk-impact-label">Impact</div>
+      <div class="risk-impact-text">Compromission complète du serveur possible. Accès à l'ensemble des données clients, historiques de commandes et configurations de paiement. Sur un hébergement mutualisé, les autres sites hébergés sur le même serveur sont également exposés.</div>
+    </div>
+  </div>
+
+  <div class="alert-box danger">
+    <div class="alert-title">La solution est une migration vers une version PHP maintenue (8.2 ou 8.3)</div>
+    <div class="alert-item">
+      <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#dc2626"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+      Cette migration résout la dette technique accumulée depuis 2021 et rétablit un niveau de support sécurité normal. Elle nécessite une vérification de compatibilité avec vos extensions WordPress actuelles — c'est un travail planifiable, pas une urgence de crise, mais à traiter en priorité.
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 2 : ACCÈS ADMIN -->
+<div class="section">
+  <div class="section-label">Point 02</div>
+  <div class="section-title">L'espace de gestion du site est accessible à tous sans restriction</div>
+
+  <div class="risk-block">
+    <div class="risk-header">
+      <div class="risk-icon orange">🟠</div>
+      <div class="risk-meta">
+        <div class="risk-title">Porte d'entrée administration ouverte — aucun filtre en place</div>
+        <div class="risk-sub">wp-admin · wp-login.php · Code HTTP 200 · Stack Varnish/Apache</div>
+      </div>
+      <span class="badge badge-orange">Élevé</span>
+    </div>
+    <div class="risk-desc">
+      La page de connexion à l'espace d'administration de votre site est accessible à n'importe qui sur internet, sans restriction. Des robots automatisés scannent en permanence ce type de pages et tentent des milliers de combinaisons de mots de passe par heure.
+      <br><br>
+      Sur votre architecture serveur (Varnish + Apache), l'absence de filtrage sur ces pages crée un double risque : la compromission d'un compte administrateur, mais aussi la possibilité de saturer votre serveur par un volume massif de tentatives de connexion — rendant le site inaccessible à vos clients le temps de l'attaque.
+    </div>
+    <div class="risk-impact">
+      <div class="risk-impact-label">Impact</div>
+      <div class="risk-impact-text">Prise de contrôle de l'espace d'administration. Modification des commandes, des adresses de livraison, des données clients. Ou indisponibilité du site par saturation — interruption de service directement visible par vos clients e-commerce.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SECTION 3 : HEADERS -->
+<div class="section">
+  <div class="section-label">Point 03</div>
+  <div class="section-title">Deux protections navigateur absentes — vos clients peuvent être manipulés à leur insu</div>
+
+  <div class="risk-block">
+    <div class="risk-header">
+      <div class="risk-icon yellow">🟡</div>
+      <div class="risk-meta">
+        <div class="risk-title">Protections côté visiteur non configurées</div>
+        <div class="risk-sub">X-Frame-Options · X-Content-Type-Options</div>
+      </div>
+      <span class="badge badge-orange">Moyen</span>
+    </div>
+    <div class="risk-desc">
+      Deux protections standard qui s'activent dans le navigateur de vos visiteurs sont absentes de votre configuration.
+    </div>
+    <div style="margin-top:14px;">
+      <div class="alert-item" style="margin-bottom:10px;">
+        <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#d97706"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+        <span><strong>Détournement de clics (Clickjacking)</strong> — Un attaquant peut superposer une couche invisible sur votre site pour faire croire à un client qu'il clique sur un bouton normal, alors qu'il valide en réalité une action différente : modifier une adresse de livraison, confirmer une commande frauduleuse, ou transmettre ses informations à un tiers.</span>
+      </div>
+      <div class="alert-item">
+        <svg class="ai" width="14" height="14" viewBox="0 0 14 14"><circle cx="7" cy="7" r="7" fill="#d97706"/><rect x="6.2" y="3" width="1.6" height="5" rx=".8" fill="white"/><circle cx="7" cy="10" r=".9" fill="white"/></svg>
+        <span><strong>Fichiers téléchargés potentiellement dangereux</strong> — Sans cette protection, un fichier uploadé sur votre plateforme (photo de profil, justificatif, document) peut être interprété par le navigateur comme du code à exécuter plutôt que comme un simple fichier — ouvrant la voie à un détournement de session client.</span>
+      </div>
+    </div>
+    <div class="risk-impact">
+      <div class="risk-impact-label">Impact</div>
+      <div class="risk-impact-text">Ces deux protections se configurent en quelques minutes côté serveur. Leur absence expose les clients finaux de OuiCarry à des manipulations invisibles sur votre propre site.</div>
+    </div>
+  </div>
+</div>
+
+<!-- SYNTHÈSE -->
+<div class="section">
+  <div class="section-label">Synthèse</div>
+  <div class="section-title">Plan de remédiation — trois actions, par ordre de priorité</div>
+
+  <div class="vuln-table">
+    <div class="vuln-row thead"><span>Action</span><span>Priorité</span><span>Ce que ça corrige</span></div>
+    <div class="vuln-row">
+      <div class="vuln-name">Migration PHP 8.2 ou 8.3</div>
+      <div><span class="badge badge-red">Urgente</span></div>
+      <div class="vuln-impact">Rétablit un support sécurité actif. Supprime 4 ans de vulnérabilités non corrigées sur le serveur.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Restriction accès administration</div>
+      <div><span class="badge badge-orange">Élevée</span></div>
+      <div class="vuln-impact">Bloque les attaques automatisées sur la page de connexion. Élimine le risque d'indisponibilité par saturation.</div>
+    </div>
+    <div class="vuln-row">
+      <div class="vuln-name">Configuration des en-têtes HTTP</div>
+      <div><span class="badge badge-yellow">Normale</span></div>
+      <div class="vuln-impact">Active les protections navigateur contre le détournement de clics et les fichiers malveillants.</div>
+    </div>
+  </div>
+</div>
+
+<!-- AUDITEUR -->
+<div class="auditor-section">
+  <div class="auditor-avatar">SB</div>
+  <div>
+    <div class="auditor-name">Sereigne Bara Thiam</div>
+    <div class="auditor-role">Auditeur WordPress · Fondateur WP_Architect · Dakar, Sénégal</div>
+    <div class="auditor-tools">
+      <span class="tool-tag">WhatWeb</span>
+      <span class="tool-tag">WPScan</span>
+      <span class="tool-tag">Nikto</span>
+      <span class="tool-tag">Nmap</span>
+      <span class="tool-tag">Lighthouse CLI</span>
+      <span class="tool-tag">Kali Linux</span>
+    </div>
+    <div class="auditor-note">Analyse réalisée en mode passif et non intrusif. Aucune donnée du site n'a été accédée, modifiée ou extraite. Ce rapport est fourni gracieusement, à titre informatif uniquement.</div>
+  </div>
+</div>
+
+<!-- CTA -->
+<div class="cta-block">
+  <div class="cta-eyebrow">Prochaine étape</div>
+  <div class="cta-title">Une question sur ce rapport ?</div>
+  <div class="cta-sub">Répondez simplement à cet email. Je vous propose un plan d'action concret et un échange sans engagement.</div>
+  <a class="cta-btn" href="mailto:bara.wp.architect@gmail.com?subject=Rapport%20Flash%20OuiCarry%20%E2%80%94%20Question">Répondre par email</a>
+  <div class="cta-note">bara.wp.architect@gmail.com · Réponse sous 24h · Sans engagement</div>
+</div>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="footer-brand">
+    <strong>WP_Architect.</strong><br>
+    Sereigne Bara Thiam · Dakar, Sénégal<br>
+    <strong>Site officiel</strong> : <a href="https://wp-architect.vercel.app" target="_blank">wp-architect.vercel.app</a>
+  </div>
+  <div class="footer-conf">Document confidentiel · Analyse passive non intrusive · Transmis à titre gracieux et informatif uniquement.</div>
+</footer>
+
+</body>
+</html>
